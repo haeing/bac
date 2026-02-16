@@ -187,7 +187,7 @@ void BACAnalysisManager::EndOfEvent(const G4Event* anEvent)
       
     }
   nhMppc = nhmppc;
-  std::cout<<nhMppc<<std::endl;
+  //std::cout<<nhMppc<<std::endl;
   //mppcsignal = nhmppc+
 
   

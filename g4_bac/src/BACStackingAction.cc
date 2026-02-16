@@ -102,8 +102,8 @@ void BACStackingAction::NewStage()
 {
   //std::cout << "Number of Scintillation photons produced in this event : "
   //	    << fScintillationCounter << std::endl;
-  std::cout << "Number of Cerenkov photons produced in this event : "
-   << fCerenkovCounter << std::endl;
+  //std::cout << "Number of Cerenkov photons produced in this event : "
+  // << fCerenkovCounter << std::endl;
   if(check==0)decay_check = 12283249;
   else if(check==1)decay_check = pid_sum/num_check;
 

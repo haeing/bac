@@ -59,8 +59,3 @@
 /vis/verbose warnings
 /run/beamOn 1
 /vis/scene/notifyHandlers scene-0
-/vis/viewer/set/style w
-/vis/viewer/refresh
-/vis/viewer/set/hiddenEdge 0
-/vis/viewer/refresh
-/run/beamOn 1

@@ -55,10 +55,8 @@ int main(int argc,char** argv)
   G4String par5_put;
 
 
-  G4UIExecutive* ui = 0;
+  G4UIExecutive* ui = nullptr;
   if ( argc == 1 ) {
-
-
     ui = new G4UIExecutive(argc, argv);
     histname = "geant4_test.root";
     par1_put ="0";  //x position
@@ -167,11 +165,12 @@ int main(int argc,char** argv)
   runManager->Initialize();
 
   // Initialize visualization
-  //
-  G4VisManager* visManager = new G4VisExecutive;
-  // G4VisExecutive can take a verbosity argument - see /vis/verbose guidance.
-  // G4VisManager* visManager = new G4VisExecutive("Quiet");
-  visManager->Initialize();
+  G4VisManager* visManager = nullptr;
+  if(argc == 1){
+    visManager = new G4VisExecutive;
+    visManager->Initialize();
+  }
+  
 
   // Get the pointer to the User Interface manager
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
@@ -198,8 +197,8 @@ int main(int argc,char** argv)
   // owned and deleted by the run manager, so they should not be deleted 
   // in the main() program !
 
-
-  delete visManager;
+  if(visManager){delete visManager;visManager = nullptr;}
+  //delete visManager;
   delete runManager;
 
   return 0;

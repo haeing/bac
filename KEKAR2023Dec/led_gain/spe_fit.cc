@@ -188,7 +188,7 @@ TF1* FitSPE(TH1* hOn, TH1* hOff, TDirectory* outDir, const char* key){
   f->SetParLimits(2, m0-20,m0);
 
   f->SetParameter(3, s0);
-  f->SetParLimits(3, 0.9*s0, 1.1*s0);
+  f->SetParLimits(3, 0.8*s0, 1.1*s0);
 
   f->SetParameter(4, Q1_init);
   f->SetParLimits(4, 0.8*Q1_init, 2.0*Q1_init);
