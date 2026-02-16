@@ -1,0 +1,41 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/main.dir/main.cc.o"
+  "CMakeFiles/main.dir/main.cc.o.d"
+  "CMakeFiles/main.dir/src/AeroHit.cc.o"
+  "CMakeFiles/main.dir/src/AeroHit.cc.o.d"
+  "CMakeFiles/main.dir/src/AeroSD.cc.o"
+  "CMakeFiles/main.dir/src/AeroSD.cc.o.d"
+  "CMakeFiles/main.dir/src/BACAnalysisManager.cc.o"
+  "CMakeFiles/main.dir/src/BACAnalysisManager.cc.o.d"
+  "CMakeFiles/main.dir/src/BACDetectorConstruction.cc.o"
+  "CMakeFiles/main.dir/src/BACDetectorConstruction.cc.o.d"
+  "CMakeFiles/main.dir/src/BACDetectorConstruction_ELPH.cc.o"
+  "CMakeFiles/main.dir/src/BACDetectorConstruction_ELPH.cc.o.d"
+  "CMakeFiles/main.dir/src/BACDetectorConstruction_edep.cc.o"
+  "CMakeFiles/main.dir/src/BACDetectorConstruction_edep.cc.o.d"
+  "CMakeFiles/main.dir/src/BACEventAction.cc.o"
+  "CMakeFiles/main.dir/src/BACEventAction.cc.o.d"
+  "CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_E70.cc.o"
+  "CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_E70.cc.o.d"
+  "CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_E72.cc.o"
+  "CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_E72.cc.o.d"
+  "CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_ELPH.cc.o"
+  "CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_ELPH.cc.o.d"
+  "CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_KEK.cc.o"
+  "CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_KEK.cc.o.d"
+  "CMakeFiles/main.dir/src/BACRunAction.cc.o"
+  "CMakeFiles/main.dir/src/BACRunAction.cc.o.d"
+  "CMakeFiles/main.dir/src/BACStackingAction.cc.o"
+  "CMakeFiles/main.dir/src/BACStackingAction.cc.o.d"
+  "CMakeFiles/main.dir/src/MPPCHit.cc.o"
+  "CMakeFiles/main.dir/src/MPPCHit.cc.o.d"
+  "CMakeFiles/main.dir/src/MPPCSD.cc.o"
+  "CMakeFiles/main.dir/src/MPPCSD.cc.o.d"
+  "main"
+  "main.pdb"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/main.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()
