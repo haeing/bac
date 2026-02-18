@@ -17,10 +17,104 @@
 static int gNmax  = 8;
 static int gCompN = 0;
 
+static inline double Ped_pdf(double x,
+                                   double m0, double s0,
+                                   double At, double tau, double x0, double w)
+{
+  auto G = [&](double xx){
+    return (1.0/(std::sqrt(2.0*TMath::Pi())*s0)) *
+           std::exp(-0.5*(xx-m0)*(xx-m0)/(s0*s0));
+  };
+  auto S = [&](double xx){
+    return 1.0/(1.0 + std::exp(-(xx-x0)/w));
+  };
+
+  auto f_un = [&](double xx){
+    return G(xx) + At * S(xx) * std::exp(-(xx-x0)/tau);
+  };
+
+  // normalize numerically in a fixed window around pedestal
+  const double xmin = m0 - 8*s0;
+  const double xmax = m0 + 20*s0;
+  const int N = 400;
+  const double dx = (xmax-xmin)/N;
+
+  double norm = 0.0;
+  for(int i=0;i<N;i++){
+    double xx = xmin + (i+0.5)*dx;
+    norm += f_un(xx);
+  }
+  norm *= dx;
+  if(norm <= 0) norm = 1.0;
+
+  return f_un(x) / norm;
+}
 
 static inline double g_cluster(int k, double p){
   if(k < 1) return 0.0;
   return std::exp(-p) * std::pow(p, k-1) / TMath::Factorial(k-1);
+}
+
+static bool FitPedestalSmooth(TH1* hOff,
+                              double& m0, double& s0,
+                              double& At, double& tau,
+                              double& x0, double& w)
+{
+  if(!hOff) return false;
+
+  // rough estimates
+  const double xPeak = hOff->GetBinCenter(hOff->GetMaximumBin());
+  const double rms   = hOff->GetRMS();
+
+  // fit range: pedestal + tail이 충분히 들어가도록
+  const double xmin = xPeak - 6.0*rms;
+  const double xmax = xPeak + 12.0*rms;
+
+  TF1* fOff = new TF1("fOff_pedSmooth",
+    "[0]*TMath::Gaus(x,[1],[2],false) + "
+    "[3]*(1.0/(1.0+TMath::Exp(-(x-[5])/[6])))*TMath::Exp(-(x-[5])/[4])",
+    xmin, xmax);
+
+  // init
+  const double x0_init = xPeak + 1.5*rms;
+  fOff->SetParameters(
+    hOff->GetMaximum(),   // [0] Ag
+    xPeak,                // [1] m0
+    0.6*rms,              // [2] s0
+    0.1*hOff->GetMaximum(), // [3] At(scale)
+    2.0*rms,              // [4] tau
+    x0_init,              // [5] x0
+    0.5*rms               // [6] w
+  );
+
+  // limits (중요)
+  fOff->SetParLimits(2, 0.1, 50.0);                         // s0
+  fOff->SetParLimits(3, 0.0, 0.5*hOff->GetMaximum());       // At (scale)
+  fOff->SetParLimits(4, 0.5*rms, 30.0*rms);                 // tau
+  fOff->SetParLimits(5, xPeak + 0.2*rms, xPeak + 6.0*rms);  // x0
+  fOff->SetParLimits(6, 0.05*rms, 2.0*rms);                 // w
+
+  TFitResultPtr r = hOff->Fit(fOff, "RSQ"); // Q: quiet
+
+  if(int(r) != 0) {
+    // fit 실패 시에도 파라미터를 읽을 수는 있지만, 일단 실패 처리
+    return false;
+  }
+
+  // output
+  m0  = fOff->GetParameter(1);
+  s0  = std::fabs(fOff->GetParameter(2));
+
+  // 여기 주의: fOff의 [3]은 "tail amplitude(스케일)"이야.
+  // 네 Qmodel의 pedestal PDF 정규화 구조에선 At를 "weight"로 쓰게 될 텐데,
+  // 지금 단계에선 일단 fOff 결과를 그대로 At_init로 넣고,
+  // LED-on에서는 Fix해서 shape만 유지하는 용도로 쓰면 충분히 잘 동작함.
+  At  = fOff->GetParameter(3);
+  tau = std::fabs(fOff->GetParameter(4));
+  x0  = fOff->GetParameter(5);
+  w   = std::fabs(fOff->GetParameter(6));
+
+  return true;
 }
 
 // ----- compound Poisson probabilities P(n) up to Nmax
@@ -58,7 +152,11 @@ static double Qmodel(double *xx, double *par){
   const double Q1  = par[4];
   const double s1  = std::fabs(par[5]);
   const double pxt = par[6];
-
+  const double At  = par[7];
+  const double tau = std::fabs(par[8]);
+  const double x0  = par[9];
+  const double w   = std::fabs(par[10]);
+  
   std::vector<double> Pn;
   CompoundPoissonPn(Pn, gNmax, mu0, pxt);
 
@@ -70,7 +168,9 @@ static double Qmodel(double *xx, double *par){
   double sum = 0.0;
 
   // n=0 pedestal
-  sum += Pn[0] * G(x, m0, s0);
+  
+  //sum += Pn[0] * G(x, m0, s0);
+  sum += Pn[0] * Ped_pdf(x, m0, s0, At, tau, x0, w);
 
   // n>=1
   for(int n=1;n<=gNmax;++n){
@@ -93,7 +193,12 @@ static double Qcomp(double *xx, double *par){
   const double Q1  = par[4];
   const double s1  = std::fabs(par[5]);
   const double pxt = par[6];
-  const int comp = par[7];
+  const double At  = par[7];
+  const double tau = std::fabs(par[8]);
+  const double x0  = par[9];
+  const double w   = std::fabs(par[10]);
+  const int comp = par[11];
+  
 
   std::vector<double> Pn;
   CompoundPoissonPn(Pn, gNmax, mu0, pxt);
@@ -108,7 +213,7 @@ static double Qcomp(double *xx, double *par){
   if(n<0 || n>gNmax) return 0.0;
 
   if(n==0){
-    return A0 * Pn[0] * G(x, m0, s0);
+    return A0 * Pn[0] * Ped_pdf(x, m0, s0, At, tau, x0, w);
   }else{
     const double var  = s0*s0 + n*s1*s1;
     const double sig  = std::sqrt(std::max(var, 1e-12));
@@ -136,7 +241,7 @@ static bool FitPedestalGaussian(TH1* hOff, double &m0, double &s0){
 }
 
 // ----- Estimate Q1 from peak finding
-static bool EstimateQ1(TH1* hOn, double &Q1_init){
+static bool EstimateQ1(TH1* hOn, double &Q1_init, double &m0_init){
   TSpectrum spec(10);
   int nfound = spec.Search(hOn, 2.0, "nobackground", 0.05);
   if(nfound<=2){
@@ -146,21 +251,25 @@ static bool EstimateQ1(TH1* hOn, double &Q1_init){
   double* px = spec.GetPositionX();
   std::vector<double> peaks(px, px+nfound);
   std::sort(peaks.begin(), peaks.end());
+  m0_init  = peaks[0];
   Q1_init = peaks[1] - peaks[0];
   Q1_init= std::max(Q1_init, 10.0);
   return true;
 }
 
+
 // ----- Fit full spectrum
 TF1* FitSPE(TH1* hOn, TH1* hOff, TDirectory* outDir, const char* key){
   double m0=0, s0=0;
-  if(!FitPedestalGaussian(hOff, m0, s0)){
-    std::cerr << "Pedestal Gaussian fit failed.\n";
+  double At=0, tau=0, x0=0, w=0;
+  
+  if(!FitPedestalSmooth(hOff, m0, s0, At, tau, x0, w)){
+    std::cerr << "Pedestal smooth fit failed.\n";
     return nullptr;
   }
 
   double Q1_init=0;
-  EstimateQ1(hOn, Q1_init);
+  EstimateQ1(hOn, Q1_init, m0);
   if(Q1_init<=0) Q1_init = std::max(5.0*s0, 12.0);
 
   double mu_init = (hOn->GetMean() - hOff->GetMean())/Q1_init;
@@ -174,8 +283,9 @@ TF1* FitSPE(TH1* hOn, TH1* hOff, TDirectory* outDir, const char* key){
   const double xmin = hOn->GetXaxis()->GetXmin();
   const double xmax = hOn->GetXaxis()->GetXmax();
 
-  TF1* f = new TF1("fSPE_gausPed_xtalk", Qmodel, xmin, xmax, 7);
-  f->SetParNames("A0","mu0","m0","sigma0","Q1","sigma1","pxt");
+  //TF1* f = new TF1("fSPE_gausPed_xtalk", Qmodel, xmin, xmax, 7);
+  TF1* f = new TF1("fSPE_gausPed_xtalk", Qmodel, xmin, xmax, 11);
+  f->SetParNames("A0","mu0","m0","sigma0","Q1","sigma1","pxt","At","tau","x0","w");
 
   const double binw = hOn->GetXaxis()->GetBinWidth(1);
   f->SetParameter(0, hOn->GetEntries()*binw);
@@ -184,14 +294,14 @@ TF1* FitSPE(TH1* hOn, TH1* hOff, TDirectory* outDir, const char* key){
   f->SetParameter(1, mu_init);
   f->SetParLimits(1, mu_init*0.3,mu_init*7.0);
 
-  f->SetParameter(2, m0-20.);
-  f->SetParLimits(2, m0-20,m0);
+  f->SetParameter(2, m0);
+  f->SetParLimits(2, m0-1,m0+1);
 
   f->SetParameter(3, s0);
-  f->SetParLimits(3, 0.8*s0, 1.1*s0);
+  f->SetParLimits(3, 0.8*s0, 1.2*s0);
 
   f->SetParameter(4, Q1_init);
-  f->SetParLimits(4, 0.8*Q1_init, 2.0*Q1_init);
+  f->SetParLimits(4, 0.95*Q1_init, 1.05*Q1_init);
 
   f->SetParameter(5, std::max(0.3*Q1_init, s0));
   f->SetParLimits(5, 0.01*s0, 0.5*s0);
@@ -199,6 +309,12 @@ TF1* FitSPE(TH1* hOn, TH1* hOff, TDirectory* outDir, const char* key){
   // crosstalk: float near 0.05 (seed), but free
   f->SetParameter(6, 0.1);
   f->SetParLimits(6, 0.0, 0.6);
+
+  f->SetParLimits(7, At*0.9, At*1.1);
+  f->SetParLimits(8, tau*0.9,tau*1.1);
+  f->SetParLimits(9, x0*0.9,x0*1.1);
+  f->SetParLimits(10, w*0.9,w*1.1);
+  
 
 
   // fit range
@@ -315,10 +431,10 @@ void spe_fit(int pednumber, int runnumber, int board){
     gCompN = n;
     TString nm;
     nm.Form("fn%d", n);
-    //TF1* fn = new TF1(nm.Data(), Qcomp, fitL, fitR, 7);
-    fn[n] = new TF1(nm.Data(), Qcomp, fitL, fitR, 8);
-    for(int ip=0;ip<7;++ip) fn[n]->SetParameter(ip, f->GetParameter(ip));
-    fn[n]->SetParameter(7,n);
+    //fn[n] = new TF1(nm.Data(), Qcomp, fitL, fitR, 8);
+    fn[n] = new TF1(nm.Data(), Qcomp, fitL, fitR, 12);
+    for(int ip=0;ip<11;++ip) fn[n]->SetParameter(ip, f->GetParameter(ip));
+    fn[n]->SetParameter(11,n);
     fn[n]->SetLineStyle(2);
     fn[n]->SetLineWidth(3);
     fn[n]->SetLineColor(cols[n % cols.size()]);
