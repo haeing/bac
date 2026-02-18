@@ -10,7 +10,7 @@ for board in {0..3}; do
 
     echo "Board=$board  Run=$run  Ped=$ped  CH=$ch  MPPC_HV=$mppc_hv  LED_HV=$led_hv"
 
-    root -l -b -q "spe_fit.cc($run, $ped, $board)"
+    root -l -b -q "spe_fit.cc($ped, $run, $board)"
 
   done < "$infofile"
 done
