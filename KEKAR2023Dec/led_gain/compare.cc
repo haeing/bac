@@ -143,8 +143,8 @@ bool LoadKekHVScan(const std::string& csvPath,
 // -------------------------
 void compare()
 {
-  const std::string baselineCsv = "spe_result/Q1_pxt_all.csv";
-  const std::string kekCsv      = "spe_result/Q1_pxt_all_kek.csv";
+  const std::string baselineCsv = "spe_result_update/Q1_pxt_all.csv";
+  const std::string kekCsv      = "spe_result_update/Q1_pxt_all_kek.csv";
 
   std::array<std::array<ValErr, NCH>, NBOARD> baselineQ1{}, baselinePxt{};
   std::array<std::array<ValErr, NHV>, NBOARD> kekQ1{}, kekPxt{};

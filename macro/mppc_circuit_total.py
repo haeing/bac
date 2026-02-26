@@ -98,7 +98,7 @@ def draw_pz_network(d, in_pt, Rser=r'$22\,\Omega$', Cser='100 pF', Rpar=r'$390\,
     bw = dx + 2.0
     bh = dy + 2.0
     #box(d, bx, by, bw, bh, lw=1.0)
-    d.add(elm.Label().at((bx + bw/2, by + bh + 0.25)).label('Pole-zero cancellation', loc='center'))
+    d.add(elm.Label().at((bx + bw/2, by + bh + 0.5)).label('Pole-zero cancellation', loc='center'))
 
     return out_pt
 
@@ -153,7 +153,7 @@ def draw_ad8000_stage(d, in_pt, RF_label=r'$22\,\Omega$', Cout_label='C53\n0.1u'
     d.add(elm.Line().at(op.out).right().length(1.2))
     d.add(elm.Capacitor().right().length(2.0).label(Cout_label, loc='top'))
     x, y = d.here
-    d.add(elm.Label().at((x + 1.0, y)).label('Output', loc='center'))
+    d.add(elm.Label().at((x + 1.5, y)).label('Output', loc='center'))
 
     d.add(elm.Label().at((op.center[0], op.center[1] - 2.2)).label(op_label, loc='center'))
     return d.here
@@ -164,13 +164,17 @@ if __name__ == '__main__':
     R_SER = r'$22\,\Omega$'
     C_SER = '100 pF'
     R_PAR = r'$390\,\Omega$'
-    RF    = r'$\mathrm{R_{F}} = 10\,\mathrm{k}\Omega$'
+    RF    = r'$10\,\mathrm{k}\Omega$'
     COUT  = r'$0.1\,\mu\mathrm{F}$'
     OPAMP = 'AD8000'
 
     d = schemdraw.Drawing()
-    d.config(margin=2.0)
-    d.config(unit=1.4)
+
+    d.config(
+        margin=0.5,
+        unit=1.4,
+        fontsize=25
+    )
 
     # ---- MPPC rotated block (left) ----
     bias_node, return_node, sig_out = draw_mppc_equiv_rot_ccw(d, at=(0, 0), w=6.0, h=10.0, n_cells=4)
@@ -211,7 +215,7 @@ if __name__ == '__main__':
     d.add(elm.Line().at((vb_src2[0],vb_src2[1]+1.3)).up().length(1.0))
     d.add(elm.Ground().up())
 
-    d.add(elm.Label().at((vb_src2[0] - 1.0, vb_src2[1])).label(r'$\mathrm{V}_{\mathrm{bias}}$', loc='right'))
+    d.add(elm.Label().at((vb_src2[0] - 1.5, vb_src2[1])).label(r'$\mathrm{V}_{\mathrm{bias}}$', loc='right'))
     
 
     # ---- PZ network directly from MPPC output (already outside box) ----

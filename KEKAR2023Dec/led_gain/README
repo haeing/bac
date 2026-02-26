@@ -21,7 +21,7 @@ LED : 1.22 ~ 1.24 V, 50 ns
 
 [BAC_LED_KEK.root]
 LED data taken from KEKAR beamtest setup
-HV : 56, 56, 57 V
+HV : 56, 57, 58 V
 Gate width : 130 ns
 LED : 1.22 V, 50 ns
 

@@ -104,17 +104,17 @@ int main(int argc, char* argv[]){
   int kvc_ch = 8;
   double gain_bac[bac_ch];
 
-  gain_bac[1] = 14.7686;
-  gain_bac[2] = 14.6856;
-  gain_bac[3] = 15.1184;
-  gain_bac[4] = 13.1112;
+  gain_bac[1] = 14.0207;
+  gain_bac[2] = 14.7739;
+  gain_bac[3] = 15.2693;
+  gain_bac[4] = 12.9132;
 
   double pxt_bac[5];
   pxt_bac[0] = 0.0;
-  pxt_bac[1] = 0.452525;
-  pxt_bac[2] = 0.506778;
-  pxt_bac[3] = 0.509973;
-  pxt_bac[4] = 0.350078;
+  pxt_bac[1] = 0.621963;
+  pxt_bac[2] = 0.661939;
+  pxt_bac[3] = 0.60296;
+  pxt_bac[4] = 0.463463;
   
   double gain_kvc[kvc_ch];
   gain_kvc[0] = 20;
@@ -444,7 +444,7 @@ int main(int argc, char* argv[]){
 	}
 	
 	
-	hist_baca[bac]->Fill((baca[bac]-pa_baca_pe[bac][1])/gain_bac[bac]*pxt_bac[bac]);
+	hist_baca[bac]->Fill((baca[bac]-pa_baca_pe[bac][1])/gain_bac[bac]*(1-pxt_bac[bac]));
 
       }
       hist_bact->Fill(bact[0]);
@@ -528,7 +528,7 @@ int main(int argc, char* argv[]){
       }
     }
     if(trig_pass==4){
-      hist_baca_full->Fill((baca[0]-pa_baca_pe[0][1])/gain_bac[0]*pxt_bac[0]);
+      hist_baca_full->Fill((baca[0]-pa_baca_pe[0][1])/gain_bac[0]*(1-pxt_bac[0]));
       if(trig_pass==4&&bact[0]>(pa_bact[1]-5*pa_bact[2])&&bact[0]<(pa_bact[1]+5*pa_bact[2])){
 	bac_pass = 1;
 	for(int bac=0;bac<bac_ch;bac++){
@@ -539,7 +539,7 @@ int main(int argc, char* argv[]){
 	    baca[bac] = baca_raw[bac-1];
 	  }
 	}
-	hist_baca_cut->Fill((baca[0]-pa_baca_pe[0][1])/gain_bac[0]*pxt_bac[0]);
+	hist_baca_cut->Fill((baca[0]-pa_baca_pe[0][1])/gain_bac[0]*(1-pxt_bac[0]));
 	hist_bact_cut->Fill(bact[0]);
       }
       eff_bac->Fill(bac_pass,x_pos);
@@ -567,7 +567,7 @@ int main(int argc, char* argv[]){
   TCanvas *c_bac_npe = new TCanvas("c_bac_npe","c_bac_npe");
   hist_baca[0]->Draw();
   hist_baca_cut->SetFillColorAlpha(kBlue, 0.35);
-  hist_baca_cut->Draw("same");x
+  hist_baca_cut->Draw("same");
   c_bac_npe->SaveAs(Form("picture/run00%d_bac_npe.pdf",runnumber));
 
   

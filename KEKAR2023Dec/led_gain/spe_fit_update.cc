@@ -17,6 +17,8 @@
 static int gNmax  = 8;
 static int gCompN = 0;
 
+static const bool kek = true;
+
 static inline double Ped_pdf(double x,
                              double m0, double s0,
                              double At, double tau, double x0, double w)
@@ -247,8 +249,8 @@ static bool FitPedestalGaussian(TH1* hOff, double &m0, double &s0){
 static bool EstimateQ1(TH1* hOn, double &Q1_init, double &m0_init){
   TSpectrum spec(10);
   int nfound = spec.Search(hOn, 2.0, "nobackground", 0.05);
-  if(nfound<2){
-    //Q1_init = std::max(hOn->GetRMS()/5.0, 12.0);
+  
+  if(nfound < 1){
     Q1_init = 12.0;
     m0_init = 200;
     return true;
@@ -256,6 +258,11 @@ static bool EstimateQ1(TH1* hOn, double &Q1_init, double &m0_init){
   double* px = spec.GetPositionX();
   std::vector<double> peaks(px, px+nfound);
   std::sort(peaks.begin(), peaks.end());
+  if(nfound == 1){
+    Q1_init = 12.0;
+    m0_init = peaks[0];
+    return true;
+  }
   m0_init  = peaks[0];
   Q1_init = peaks[1] - peaks[0];
   Q1_init= std::max(Q1_init, 10.0);
@@ -300,10 +307,11 @@ TF1* FitSPE(TH1* hOn, TH1* hOff, TDirectory* outDir, const char* key){
   f->SetParameter(1, mu_init);
   f->SetParLimits(1, mu_init*0.3,mu_init*7.0);
   //f->SetParLimits(1, mu_init*0.3,mu_init*1.5);
-
+  
   //m0 -=Q1_init*1.;
   f->SetParameter(2, m0);
   f->SetParLimits(2, m0-1,m0+1);
+  //f->SetParLimits(2, m0-10,m0+10);
 
   f->SetParameter(3, s0);
   //f->SetParLimits(3, 0.8*s0, 1.2*s0);
@@ -311,13 +319,14 @@ TF1* FitSPE(TH1* hOn, TH1* hOff, TDirectory* outDir, const char* key){
 
   f->SetParameter(4, Q1_init);
   f->SetParLimits(4, 0.95*Q1_init, 1.05*Q1_init);
+  //f->SetParLimits(4, 0.7*Q1_init, 1.1*Q1_init);
 
   f->SetParameter(5, std::max(0.3*Q1_init, s0));
   f->SetParLimits(5, 0.01*s0, 0.5*s0);
 
   // crosstalk: float near 0.05 (seed), but free
   f->SetParameter(6, 0.1);
-  f->SetParLimits(6, 0.0, 0.6);
+  f->SetParLimits(6, 0.0, 0.9);
 
 
 
@@ -352,13 +361,16 @@ TF1* FitSPE(TH1* hOn, TH1* hOff, TDirectory* outDir, const char* key){
   
 }
 void spe_fit_update(int board, int channel){
-  TFile *fin = TFile::Open("BAC_LED_57V.root", "READ");
+  TFile *fin;
+  if(!kek)fin = TFile::Open("BAC_LED_57V.root", "READ");
+  if(kek)fin = TFile::Open("BAC_LED_KEK.root", "READ");
   
   TTree *tree = nullptr;
   fin->GetObject("tree", tree);
 
-  double ADC_ped[4][16];
-  double ADC_led[4][16];
+  
+  double ADC_ped[4][3];
+  double ADC_led[4][3];
   
   tree->SetBranchAddress("ADC_ped", ADC_ped);
   tree->SetBranchAddress("ADC_led", ADC_led);
@@ -377,9 +389,14 @@ void spe_fit_update(int board, int channel){
     return;
   }
 
-
-  TFile *fout = new TFile(Form("spe_result_update/spe_result%d_%d.root",board,channel), "RECREATE");
-  const char* key = Form("mppc%d_%d", board, channel);
+  TFile *fout;
+  if(!kek)fout = new TFile(Form("spe_result_update/spe_result%d_%d.root",board,channel), "RECREATE");
+  if(kek)fout = new TFile(Form("spe_result_update/spe_result%d_hv%d.root",board,channel+56), "RECREATE");
+  
+  
+  const char* key;
+  if(!kek)key = Form("mppc%d_%d", board, channel);
+  if(kek)key = Form("mppc%d_hv%d", board, channel+56);
   TF1* f = FitSPE(hOn, hOff, fout, key);
 
   fout->Close();
@@ -401,7 +418,8 @@ void spe_fit_update(int board, int channel){
   hOn->SetLineWidth(2);
   hOn->Draw("hist");
 
-  int Ndraw = std::min(gNmax, 8);
+  //int Ndraw = std::min(gNmax, 8);
+  int Ndraw = gNmax;
   std::vector<int> cols = {kGray+2,kBlue+1,kGreen+2,kMagenta+1,kOrange+7,kCyan+2,kViolet+1,kTeal+3};
 
   double fitL, fitR;
