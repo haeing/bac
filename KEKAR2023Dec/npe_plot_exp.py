@@ -19,7 +19,8 @@ BR_NPE   = "bac_npe"
 # FIXED X/Y GRID (mm)
 # =========================
 xs = np.array([-48, -32, -16, 0, 16, 32, 48], dtype=int)
-ys = np.array([-54, -36, -18, 0, 18, 36, 54], dtype=int)
+#ys = np.array([-54, -36, -18, 0, 18, 36, 54], dtype=int)
+ys = np.array([-36, -18, 0, 18, 36], dtype=int)
 
 # =========================
 # Selection rules

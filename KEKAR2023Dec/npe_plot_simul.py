@@ -8,7 +8,7 @@ from scipy.optimize import curve_fit
 # =========================
 # 설정
 # =========================
-PATTERN = "../../../data/KEKAR2023Dec/g4_root/kek_aerogel3_*.root"   # 파일 패턴
+PATTERN = "../../../data/KEKAR2023Dec/g4_root/kek_aerogel2_*.root"   # 파일 패턴
 TREE = "tree"
 BR = "nhMppc"
 
