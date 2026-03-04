@@ -8,6 +8,10 @@
 #include <vector>
 #include <cmath>
 
+const int NumOfSegT0 = 5;
+const int NumOfSegBH2 = 12;
+const int NumOfSegBAC = 4;
+
 struct WStat {
   double sumw  = 0.0;
   double sumwx = 0.0;
@@ -112,6 +116,79 @@ void analysis_t110()
       << v_pxt[i] << " ± " << v_pxterr[i] << "\n";
   }
 
+  int runnumber = 303;
+  int runnumber_ped = 306;
+  TString dir = "/gpfs/group/had/sks/Users/haein/JPARC2025May_root";
+  TFile *file = new TFile(Form("%s/run00%d_Hodoscope.root",dir.Data(),runnumber));
+  TTree *data = (TTree*)file->Get("hodo");
+
+  TFile *file_ped = new TFile(Form("%s/run00%d_Hodoscope.root",dir.Data(),runnumber_ped));
+  TTree *data_ped = (TTree*)file_ped->Get("hodo");
+
+  vector<double>* t0_adc_u = nullptr;
+  vector<double>* t0_adc_d = nullptr;
+
+  vector<vector<double>>* t0_tdc_s = nullptr;
+
+  vector<double> *bh2_adc_u = nullptr;
+  vector<double> *bh2_adc_d = nullptr;
+
+  vector<vector<double>>* bh2_tdc_s = nullptr;
+  
+
+  vector<double>* bac_adc_u = nullptr;
+  vector<vector<double>>*bac_tdc_u = nullptr;
+
+  data->SetBranchAddress("t0_adc_u",&t0_adc_u);
+  data->SetBranchAddress("t0_adc_d",&t0_adc_d);
+  data->SetBranchAddress("t0_tdc_s",&t0_tdc_s);
+
+  data->SetBranchAddress("bh2_adc_u",&bh2_adc_u);
+  data->SetBranchAddress("bh2_adc_d",&bh2_adc_d);
+  data->SetBranchAddress("bh2_tdc_s",&bh2_tdc_s);
+
+  TH1D *hist_t0_adc_u[NumOfSegT0];
+  TH1D *hist_t0_adc_d[NumOfSegT0];
+  TH1D *hist_t0_tdc_s[NumOfSegT0];
+
+  TH1D *hist_bh2_adc_u[NumOfSegBH2];
+  TH1D *hist_bh2_adc_d[NumOfSegBH2];
+  TH1D *hist_bh2_tdc_s[NumOfSegBH2];
+  
+  for(int i=0;i<NumOfSegT0;i++){
+    hist_t0_adc_u[i] = new TH1D(Form("hist_t0_adc_u%d",i),Form("hist_t0_adc_u%d",i),400,0,400);
+    hist_t0_adc_d[i] = new TH1D(Form("hist_t0_adc_d%d",i),Form("hist_t0_adc_d%d",i),400,0,400);
+    hist_t0_tdc_s[i] = new TH1D(Form("hist_t0_tdc_s%d",i),Form("hist_t0_tdc_s%d",i),1000,680000,700000);
+
+  }
+  for(int i=0;i<NumOfSegBH2;i++){
+    hist_bh2_adc_u[i] = new TH1D(Form("hist_bh2_adc_u%d",i),Form("hist_bh2_adc_u%d",i),400,0,400);
+    hist_bh2_adc_d[i] = new TH1D(Form("hist_bh2_adc_d%d",i),Form("hist_bh2_adc_d%d",i),400,0,400);
+    hist_bh2_tdc_s[i] = new TH1D(Form("hist_bh2_tdc_s%d",i),Form("hist_bh2_tdc_s%d",i),1000,680000,700000);
+  }
+
+  for(int n=0;n<data->GetEntries();n++){
+    data->GetEntry(n);
+    for(int i=0;i<NumOfSegT0;i++){
+      hist_t0_adc_u[i]->Fill((*t0_adc_u)[i]);
+      hist_t0_adc_d[i]->Fill((*t0_adc_d)[i]);
+    }
+    for(int i=0;i<NumOfSegBH2;i++){
+    }
+  }
+  TString out_pdf = "result.pdf";
+  TCanvas* c1 = new TCanvas("c1","c1");
+  c1->Print(out_pdf +"[");
+
+  c1->Divide(3,4);
+  for(int i=0;i<NumOfSegT0;i++){
+    c1->cd(i+1);
+    hist_t0_adc_u[i]->Draw();
+    c1->cd(i+7);
+    hist_t0_adc_d[i]->Draw();
+  }
+  c1->Print(out_pdf);
+  c1->Print(out_pdf + "]");
   
   
 }
