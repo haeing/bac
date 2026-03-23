@@ -358,7 +358,7 @@ TF1* FitSPE(TH1* hOn, TH1* hOff, TDirectory* outDir, const char* key){
   
 }
 void spe_fit_update(int pednumber, int runnumber, int board){
-  TString dir = "/gpfs/group/had/sks/Users/haein/JPARC2025May_root";
+  TString dir = "/Users/ihaein/Work/E72/j-parc-haein/data/JPARC2025May";
   TFile *fin_ped = TFile::Open(Form("%s/run00%d_Hodoscope.root",dir.Data(),pednumber),"READ");
   TFile *fin = TFile::Open(Form("%s/run00%d_Hodoscope.root",dir.Data(),runnumber),"READ");
   std::cout<<"file open"<<std::endl;

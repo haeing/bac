@@ -46,8 +46,8 @@ void BACPrimaryGeneratorAction_KEK::GeneratePrimaries(G4Event* anEvent)
   G4double y_moving = pa2*mm;
   
 
-  G4double tight_size_x = 9;
-  G4double tight_size_y = 7;
+  G4double tight_size_x = 115;
+  G4double tight_size_y = 115;
 
 
   energy = 2010*MeV;
@@ -58,10 +58,12 @@ void BACPrimaryGeneratorAction_KEK::GeneratePrimaries(G4Event* anEvent)
   fParticleGun->SetParticleMomentumDirection ( G4ThreeVector(0,0,1) );
   
 
+
   G4double x = tight_size_x*0.5-G4UniformRand()*tight_size_x*mm;
   G4double y = tight_size_y*0.5-G4UniformRand()*tight_size_y*mm;
-  //ParticleGun->SetParticlePosition(G4ThreeVector(x+x_moving,y+y_moving,-5*cm) );
-  fParticleGun->SetParticlePosition(G4ThreeVector(x_moving,y_moving,-5*cm) );
+
+  fParticleGun->SetParticlePosition(G4ThreeVector(x+x_moving,y+y_moving,-5*cm) );
+  //fParticleGun->SetParticlePosition(G4ThreeVector(x_moving,y_moving,-5*cm) );
   fParticleGun->SetParticleEnergy(energy);
   fParticleGun->GeneratePrimaryVertex(anEvent);
 

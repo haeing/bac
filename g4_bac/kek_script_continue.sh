@@ -1,11 +1,13 @@
 #!/bin/bash
 
-X_LIST=(-48 -32 -16 0 16 32 48)
-Y_LIST=(-54 -36 -18 0 18 36 54)
+#X_LIST=(-48 -32 -16 0 16 32 48)
+#Y_LIST=(-54 -36 -18 0 18 36 54)
+X_LIST=(0)
+Y_LIST=(0)
 
 MAC="test.mac"
 P=735
-A=2
+A=3
 B=4
 
 
@@ -22,7 +24,7 @@ for x in "${X_LIST[@]}"; do
 
     xtag=$x; [[ "$x" -lt 0 ]] && xtag="m${x#-}"
     ytag=$y; [[ "$y" -lt 0 ]] && ytag="m${y#-}"
-    outroot="/Users/ihaein/Work/E72/j-parc-haein/data/KEKAR2023Dec/g4_root/kek_aerogel${A}_x${xtag}_y${ytag}.root"
+    outroot="/Users/ihaein/Work/E72/j-parc-haein/data/KEKAR2023Dec/g4_root/kek_aerogel${A}_x${xtag}_y${ytag}_total.root"
 
     echo "[$total] x=$x y=$y -> $outroot"
 

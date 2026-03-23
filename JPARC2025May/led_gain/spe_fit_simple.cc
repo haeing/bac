@@ -174,14 +174,14 @@ TF1* FitSPE_Poisson_GausPed(TH1* hOn, TH1* hOff, TDirectory* outDir, const char*
   f->SetParLimits(0, hOn->GetEntries()*binw - 10000, hOn->GetEntries()*binw + 10000);
 
   f->SetParameter(1, mu_init);
-  f->SetParLimits(1, mu_init*0.3, mu_init*7.0);
+  //f->SetParLimits(1, mu_init*0.3, mu_init*7.0);
 
   // Fix/tighten pedestal mean/sigma using LED-off result
   f->SetParameter(2, m0);
-  f->SetParLimits(2, m0-1, m0+1);
+  f->SetParLimits(2, m0-10, m0+10);
 
   f->SetParameter(3, s0);
-  f->SetParLimits(3, 0.99*s0, 1.01*s0);
+  f->SetParLimits(3, 0.9*s0, 1.1*s0);
 
   f->SetParameter(4, Q1_init);
   f->SetParLimits(4, 0.8*Q1_init, 1.2*Q1_init);
@@ -213,7 +213,7 @@ TF1* FitSPE_Poisson_GausPed(TH1* hOn, TH1* hOff, TDirectory* outDir, const char*
 
 // ---------------------- Your wrapper (kept structure)
 void spe_fit_simple(int pednumber, int runnumber, int board){
-  TString dir = "/gpfs/group/had/sks/Users/haein/JPARC2025May_root";
+  TString dir = "/Users/ihaein/Work/E72/j-parc-haein/data/JPARC2025May";
   TFile *fin_ped = TFile::Open(Form("%s/run00%d_Hodoscope.root",dir.Data(),pednumber),"READ");
   TFile *fin     = TFile::Open(Form("%s/run00%d_Hodoscope.root",dir.Data(),runnumber),"READ");
 
