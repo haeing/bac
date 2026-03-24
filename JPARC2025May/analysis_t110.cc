@@ -191,7 +191,9 @@ void analysis_t110(int runnumber, int runnumber_ped)
   }
   for(int i=0;i<NumOfSegBAC;i++){
     bac_gain[i] /= 16.;
-    bac_pxt[i] /= 16.;
+    bac_gain[i] *= 1.02; //Temperature Effect(Gain increased)
+    bac_pxt[i] /=16.;
+    bac_pxt[i] *=(0.45 / 0.65);
     std::cout<<"gain : "<<bac_gain[i]<<", pxt : "<<bac_pxt[i]<<std::endl;
   }
   
