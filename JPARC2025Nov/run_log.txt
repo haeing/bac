@@ -1,0 +1,14 @@
+#runnumber mom particle trig threshold
+1928 735 pi beam 30
+1929 735 pi beam 35
+1930 735 pi beam 40
+1931 735 no clk 40
+1932 735 no clk 35
+1933 735 no clk 30
+
+2053 735 k beam 30
+2489 1000 pi beam 30
+2502 814 pi beam 30
+2509 645 pi beam 30
+2512 400 pi beam 30
+2514 300 pi beam 30
