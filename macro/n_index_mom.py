@@ -72,8 +72,8 @@ ax.axvline(sep_p2, color='black', ls=':', lw=2)
 # axis & style
 ax.set_xlim(pmin, pmax)
 ax.set_ylim(1.0, 1.35) 
-ax.set_xlabel(r'Momentum [MeV/$c$]')
-ax.set_ylabel('Refractive index')
+ax.set_xlabel(r'Momentum [MeV/$c$]',fontsize=16)
+ax.set_ylabel('Refractive index',fontsize=16)
 
 ax.grid(True, alpha=0.3)
 ax.legend(frameon=False, loc='upper right')

@@ -475,6 +475,30 @@ src/BACPrimaryGeneratorAction_KEK.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_KEK.cc.s
 .PHONY : src/BACPrimaryGeneratorAction_KEK.cc.s
 
+src/BACPrimaryGeneratorAction_T110.o: src/BACPrimaryGeneratorAction_T110.cc.o
+.PHONY : src/BACPrimaryGeneratorAction_T110.o
+
+# target to build an object file
+src/BACPrimaryGeneratorAction_T110.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_T110.cc.o
+.PHONY : src/BACPrimaryGeneratorAction_T110.cc.o
+
+src/BACPrimaryGeneratorAction_T110.i: src/BACPrimaryGeneratorAction_T110.cc.i
+.PHONY : src/BACPrimaryGeneratorAction_T110.i
+
+# target to preprocess a source file
+src/BACPrimaryGeneratorAction_T110.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_T110.cc.i
+.PHONY : src/BACPrimaryGeneratorAction_T110.cc.i
+
+src/BACPrimaryGeneratorAction_T110.s: src/BACPrimaryGeneratorAction_T110.cc.s
+.PHONY : src/BACPrimaryGeneratorAction_T110.s
+
+# target to generate assembly for a file
+src/BACPrimaryGeneratorAction_T110.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_T110.cc.s
+.PHONY : src/BACPrimaryGeneratorAction_T110.cc.s
+
 src/BACRunAction.o: src/BACRunAction.cc.o
 .PHONY : src/BACRunAction.o
 
@@ -621,6 +645,9 @@ help:
 	@echo "... src/BACPrimaryGeneratorAction_KEK.o"
 	@echo "... src/BACPrimaryGeneratorAction_KEK.i"
 	@echo "... src/BACPrimaryGeneratorAction_KEK.s"
+	@echo "... src/BACPrimaryGeneratorAction_T110.o"
+	@echo "... src/BACPrimaryGeneratorAction_T110.i"
+	@echo "... src/BACPrimaryGeneratorAction_T110.s"
 	@echo "... src/BACRunAction.o"
 	@echo "... src/BACRunAction.i"
 	@echo "... src/BACRunAction.s"

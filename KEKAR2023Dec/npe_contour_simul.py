@@ -148,8 +148,8 @@ def plot_simulation_contour(xc, yc, zmap, outname):
         color="black", linewidth=1.5
     )
 
-    ax.set_xlabel("X (mm)", fontsize=18)
-    ax.set_ylabel("Y (mm)", fontsize=18)
+    ax.set_xlabel("X [mm]", fontsize=18)
+    ax.set_ylabel("Y [mm]", fontsize=18)
     ax.tick_params(axis="both", labelsize=14)
 
     ax.set_xlim(DET_XMIN, DET_XMAX)

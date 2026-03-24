@@ -93,8 +93,8 @@ plt.plot(
 )
 
 
-plt.xlabel("Wavelength (nm)")
-plt.ylabel("Transmittance")
+plt.xlabel("Wavelength [nm]",fontsize=16)
+plt.ylabel("Transmittance",fontsize=16)
 plt.grid(alpha=0.3)
 #plt.legend()
 plt.tight_layout()

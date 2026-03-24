@@ -237,10 +237,24 @@ CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_KEK.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_KEK.cc.s"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/src/BACPrimaryGeneratorAction_KEK.cc -o CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_KEK.cc.s
 
+CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_T110.cc.o: CMakeFiles/main.dir/flags.make
+CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_T110.cc.o: /Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/src/BACPrimaryGeneratorAction_T110.cc
+CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_T110.cc.o: CMakeFiles/main.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_T110.cc.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_T110.cc.o -MF CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_T110.cc.o.d -o CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_T110.cc.o -c /Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/src/BACPrimaryGeneratorAction_T110.cc
+
+CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_T110.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_T110.cc.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/src/BACPrimaryGeneratorAction_T110.cc > CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_T110.cc.i
+
+CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_T110.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_T110.cc.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/src/BACPrimaryGeneratorAction_T110.cc -o CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_T110.cc.s
+
 CMakeFiles/main.dir/src/BACRunAction.cc.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/src/BACRunAction.cc.o: /Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/src/BACRunAction.cc
 CMakeFiles/main.dir/src/BACRunAction.cc.o: CMakeFiles/main.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/main.dir/src/BACRunAction.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/main.dir/src/BACRunAction.cc.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/src/BACRunAction.cc.o -MF CMakeFiles/main.dir/src/BACRunAction.cc.o.d -o CMakeFiles/main.dir/src/BACRunAction.cc.o -c /Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/src/BACRunAction.cc
 
 CMakeFiles/main.dir/src/BACRunAction.cc.i: cmake_force
@@ -254,7 +268,7 @@ CMakeFiles/main.dir/src/BACRunAction.cc.s: cmake_force
 CMakeFiles/main.dir/src/BACStackingAction.cc.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/src/BACStackingAction.cc.o: /Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/src/BACStackingAction.cc
 CMakeFiles/main.dir/src/BACStackingAction.cc.o: CMakeFiles/main.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/main.dir/src/BACStackingAction.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/main.dir/src/BACStackingAction.cc.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/src/BACStackingAction.cc.o -MF CMakeFiles/main.dir/src/BACStackingAction.cc.o.d -o CMakeFiles/main.dir/src/BACStackingAction.cc.o -c /Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/src/BACStackingAction.cc
 
 CMakeFiles/main.dir/src/BACStackingAction.cc.i: cmake_force
@@ -268,7 +282,7 @@ CMakeFiles/main.dir/src/BACStackingAction.cc.s: cmake_force
 CMakeFiles/main.dir/src/MPPCHit.cc.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/src/MPPCHit.cc.o: /Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/src/MPPCHit.cc
 CMakeFiles/main.dir/src/MPPCHit.cc.o: CMakeFiles/main.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/main.dir/src/MPPCHit.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/main.dir/src/MPPCHit.cc.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/src/MPPCHit.cc.o -MF CMakeFiles/main.dir/src/MPPCHit.cc.o.d -o CMakeFiles/main.dir/src/MPPCHit.cc.o -c /Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/src/MPPCHit.cc
 
 CMakeFiles/main.dir/src/MPPCHit.cc.i: cmake_force
@@ -282,7 +296,7 @@ CMakeFiles/main.dir/src/MPPCHit.cc.s: cmake_force
 CMakeFiles/main.dir/src/MPPCSD.cc.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/src/MPPCSD.cc.o: /Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/src/MPPCSD.cc
 CMakeFiles/main.dir/src/MPPCSD.cc.o: CMakeFiles/main.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/main.dir/src/MPPCSD.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/main.dir/src/MPPCSD.cc.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/src/MPPCSD.cc.o -MF CMakeFiles/main.dir/src/MPPCSD.cc.o.d -o CMakeFiles/main.dir/src/MPPCSD.cc.o -c /Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/src/MPPCSD.cc
 
 CMakeFiles/main.dir/src/MPPCSD.cc.i: cmake_force
@@ -307,6 +321,7 @@ main_OBJECTS = \
 "CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_E72.cc.o" \
 "CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_ELPH.cc.o" \
 "CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_KEK.cc.o" \
+"CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_T110.cc.o" \
 "CMakeFiles/main.dir/src/BACRunAction.cc.o" \
 "CMakeFiles/main.dir/src/BACStackingAction.cc.o" \
 "CMakeFiles/main.dir/src/MPPCHit.cc.o" \
@@ -327,6 +342,7 @@ main: CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_E70.cc.o
 main: CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_E72.cc.o
 main: CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_ELPH.cc.o
 main: CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_KEK.cc.o
+main: CMakeFiles/main.dir/src/BACPrimaryGeneratorAction_T110.cc.o
 main: CMakeFiles/main.dir/src/BACRunAction.cc.o
 main: CMakeFiles/main.dir/src/BACStackingAction.cc.o
 main: CMakeFiles/main.dir/src/MPPCHit.cc.o
@@ -401,7 +417,7 @@ main: /Users/ihaein/software/Geant4/v10.7.4/lib/libG4global.dylib
 main: /Users/ihaein/software/Geant4/v10.7.4/lib/libG4ptl.0.0.2.dylib
 main: /Users/ihaein/software/CLHEP/2.4.7.1/lib/libCLHEP-2.4.7.1.dylib
 main: CMakeFiles/main.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Linking CXX executable main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/ihaein/Work/E72/j-parc-haein/e72/bac/g4_bac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Linking CXX executable main"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/main.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

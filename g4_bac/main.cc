@@ -5,6 +5,7 @@
 #include "BACPrimaryGeneratorAction_E70.hh"
 #include "BACPrimaryGeneratorAction_E72.hh"
 #include "BACPrimaryGeneratorAction_KEK.hh"
+#include "BACPrimaryGeneratorAction_T110.hh"
 #include "BACRunAction.hh"
 #include "BACEventAction.hh"
 #include "BACStackingAction.hh"
@@ -63,7 +64,7 @@ int main(int argc,char** argv)
     par2_put = "0";  //y position
     par3_put = "735"; //momentum
     par4_put = "3"; //Number of aerogel
-    par5_put = "4"; //0 : ELPH, 1 : J-PARC E70, 2 : J-PARC Edep check 3: J-PARC E72, 4: KEK test
+    par5_put = "5"; //0 : ELPH, 1 : J-PARC E70, 2 : J-PARC Edep check 3: J-PARC E72, 4: KEK test 5 : T110
   }
 
 
@@ -98,7 +99,7 @@ int main(int argc,char** argv)
   // Detector construction
   //J-PARC
   
-  if(par5_put=="1"||par5_put=="3" || par5_put == "4")
+  if(par5_put=="1"||par5_put=="3" || par5_put == "4" || par5_put == "5")
     runManager->SetUserInitialization(new BACDetectorConstruction(par4_put));
   else if(par5_put=="2")
     runManager->SetUserInitialization(new BACDetectorConstruction_edep(par4_put));
@@ -134,6 +135,7 @@ int main(int argc,char** argv)
 
   BACAnalysisManager *anaMan = new BACAnalysisManager(histname);
   //BACPrimaryGeneratorAction *priGen = new BACPrimaryGeneratorAction();
+  
   if(par5_put=="0"){
     BACPrimaryGeneratorAction_ELPH *priGen = new BACPrimaryGeneratorAction_ELPH(par1_put,par2_put);
     runManager->SetUserAction(priGen);
@@ -149,6 +151,10 @@ int main(int argc,char** argv)
   }
   else if(par5_put=="4"){
     BACPrimaryGeneratorAction_KEK *priGen = new BACPrimaryGeneratorAction_KEK(par1_put,par2_put);
+    runManager->SetUserAction(priGen);
+  }
+  else if(par5_put=="5"){
+    BACPrimaryGeneratorAction_T110 *priGen = new BACPrimaryGeneratorAction_T110();
     runManager->SetUserAction(priGen);
   }
   BACRunAction *runAction = new BACRunAction(anaMan);

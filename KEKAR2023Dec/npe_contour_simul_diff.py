@@ -346,8 +346,8 @@ def plot_simulation_contour_with_measurement_diff(
     ax.set_xticks([-40, -20, 0, 20, 40])
     ax.set_yticks([-40, -20, 0, 20, 40])
 
-    ax.set_xlabel("X (mm)", fontsize=18)
-    ax.set_ylabel("Y (mm)", fontsize=18)
+    ax.set_xlabel("X [mm]", fontsize=18)
+    ax.set_ylabel("Y [mm]", fontsize=18)
     ax.tick_params(axis="both", labelsize=14)
 
     ax.set_aspect("equal", adjustable="box")
