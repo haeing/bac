@@ -438,6 +438,7 @@ G4VPhysicalVolume* BACDetectorConstruction::Construct()
   G4double y[numRZ];
   G4double x_out[numRZ];
 
+
   G4double p = 36;
   for(int i=0;i<numRZ;i++){
 
@@ -454,7 +455,12 @@ G4VPhysicalVolume* BACDetectorConstruction::Construct()
     poly[2*numRZ-1-i].set(x_out[i]*mm,-y[i]*mm);
   }
 
-  
+
+  G4Box* local_x = new G4Box("local_x",100*mm, 0.1*mm, 0.1*mm);
+  G4Box* local_y = new G4Box("local_y",0.1*mm, 100*mm, 0.1*mm);
+
+  local_xLW = new G4LogicalVolume(local_x,Mylar,"local_x");
+  local_yLW = new G4LogicalVolume(local_y,Mylar,"local_y");
  
     
   G4TwoVector offsetA(0.,0.), offsetB(0.,0.);
@@ -472,6 +478,8 @@ G4VPhysicalVolume* BACDetectorConstruction::Construct()
 
   //new G4PVPlacement(rotY,G4ThreeVector(0,pary,parz),FilmLW,"Film",logicWorld,false,0,checkOverlaps); //to check the scintillation of the mylar film
   new G4PVPlacement(rotY,G4ThreeVector(0,pary,parz+0.2*mm),ReflectLW,"Reflect",logicWorld,false,0,checkOverlaps);
+  //new G4PVPlacement(rotY,G4ThreeVector(0,pary,parz+0.2*mm),local_xLW,"local_x",logicWorld,false,0,checkOverlaps);
+  //new G4PVPlacement(rotY,G4ThreeVector(0,pary,parz+0.2*mm),local_yLW,"local_y",logicWorld,false,0,checkOverlaps);
 
   //To check focus
   G4double focusR = 1.0*mm;
@@ -483,7 +491,7 @@ G4VPhysicalVolume* BACDetectorConstruction::Construct()
   G4ThreeVector focusLocal(0.*mm, -p*mm, 0.*mm);
   G4ThreeVector focusWorld = (*rotY) * focusLocal + G4ThreeVector(0, pary, parz+0.2*mm);
 
-  new G4PVPlacement(nullptr, focusWorld, logicFocus, "FocusMarker", logicWorld, false, 0, checkOverlaps);
+  //new G4PVPlacement(nullptr, focusWorld, logicFocus, "FocusMarker", logicWorld, false, 0, checkOverlaps);
   
 
     
@@ -496,7 +504,8 @@ G4VPhysicalVolume* BACDetectorConstruction::Construct()
   G4RotationMatrix *rotLED = new G4RotationMatrix();
   rotLED->rotateY(+90*degree);
   G4SubtractionSolid *Side = new G4SubtractionSolid("Side",Side_full,LED,rotLED,G4ThreeVector(0,83.5*mm,75.4*mm));
-  SideLW = new G4LogicalVolume(Side,Mylar,"Side");
+  //SideLW = new G4LogicalVolume(Side,Mylar,"Side");
+  SideLW = new G4LogicalVolume(Side_full,Mylar,"Side");
   SideLW1 = new G4LogicalVolume(Side_full,Mylar,"Side1");
 
   new G4PVPlacement(0,G4ThreeVector(-131*mm/2-1*mm/2,0,0),SideLW1,"Side1",logicWorld,false,0,checkOverlaps);
@@ -518,10 +527,15 @@ G4VPhysicalVolume* BACDetectorConstruction::Construct()
   
   //G4Box* solidMPPC = new G4Box("MPPCWorld",Aerox_real/2+5*mm/2,40*mm,mppc_thick/2);
   //G4Box* solidMPPC = new G4Box("MPPCWorld",131*mm/2,40*mm,mppc_thick/2);
-  G4Box* solidMPPC = new G4Box("MPPCWorld",131*mm/2,67*mm/2,mppc_thick/2);
-  G4LogicalVolume* mppcworld = new G4LogicalVolume(solidMPPC,Mylar,"MPPCWorld");
+  //G4Box* solidMPPC = new G4Box("MPPCWorld",131*mm/2,67*mm/2,mppc_thick/2);
+  G4Box *solidFrameOuter = new G4Box("FrameOuterWorld",131*mm/2,120*mm/2,mppc_thick);
+  G4Box* solidMPPC = new G4Box("MPPCWorld",131*mm/2,67*mm/2,mppc_thick);
+  auto solidFrame = new G4SubtractionSolid("FrameWorld",solidFrameOuter,solidMPPC);
+  mppcworld = new G4LogicalVolume(solidMPPC,Mylar,"MPPCWorld");
+  frameworld = new G4LogicalVolume(solidFrame,blacksheet,"FrameWorld");
   //G4LogicalVolume* mppcworld = new G4LogicalVolume(solidMPPC,ESR,"MPPCWorld");
   new G4PVPlacement(rotM,G4ThreeVector(0*mm,Aeroy/2+mppc_place*1.5*TMath::Sin(mppc_theta),Aeroz_real/2+mppc_place*1.5*TMath::Cos(mppc_theta)),mppcworld,"MPPCWorld",logicWorld,false,0,checkOverlaps);
+  new G4PVPlacement(rotM,G4ThreeVector(0*mm,Aeroy/2+mppc_place*1.5*TMath::Sin(mppc_theta),Aeroz_real/2+mppc_place*1.5*TMath::Cos(mppc_theta)),frameworld,"FrameWorld",logicWorld,false,0,checkOverlaps);
   
   G4Box* MPPC = new G4Box("MPPC",12*mm,12*mm,mppc_thick/2);
   MPPCLW = new G4LogicalVolume(MPPC,Epoxi,"MPPC");
@@ -533,7 +547,9 @@ G4VPhysicalVolume* BACDetectorConstruction::Construct()
   }
   
 
-
+  G4Box *bottomframe = new G4Box("bottomframe",300*mm/2,1*mm,300*mm/2);
+  bottomframeLW = new G4LogicalVolume(bottomframe,blacksheet,"bottomframe");
+  new G4PVPlacement(0,G4ThreeVector(0*mm,-1*Aeroy_real/2-5*mm,0*mm),bottomframeLW,"bottomframe",logicWorld,0,checkOverlaps);
 
   //Check edep
 
@@ -555,28 +571,43 @@ G4VPhysicalVolume* BACDetectorConstruction::Construct()
   //SideLW->SetVisAttributes(visAttributes);
   fVisAttributes.push_back(visAttributes);
 
-
-
-
   
-  visAttributes = new G4VisAttributes(G4Color::Blue()); 
+  visAttributes = new G4VisAttributes(G4Color::Black()); 
   Aero1LW->SetVisAttributes(visAttributes);
   Aero2LW->SetVisAttributes(visAttributes);
   Aero3LW->SetVisAttributes(visAttributes);
-  
+  fVisAttributes.push_back(visAttributes);
+
+  visAttributes = new G4VisAttributes(false);
+  BehindLW->SetVisAttributes(visAttributes);
+  Aero_SuppLW->SetVisAttributes(visAttributes);
+  Ae_sideLW->SetVisAttributes(visAttributes);
+  BottomLW->SetVisAttributes(visAttributes);
+  Front_suppLW->SetVisAttributes(visAttributes);
+  Front_mylarLW->SetVisAttributes(visAttributes);
+  SideLW->SetVisAttributes(visAttributes);
+  SideLW1->SetVisAttributes(visAttributes);
+  Up_aeroLW->SetVisAttributes(visAttributes);
+  frameworld->SetVisAttributes(visAttributes);
+  mppcworld->SetVisAttributes(visAttributes);
+  bottomframeLW->SetVisAttributes(visAttributes);
   
   fVisAttributes.push_back(visAttributes);
+
   
 
-  visAttributes = new G4VisAttributes(G4Color::Red()); 
+  visAttributes = new G4VisAttributes(G4Color::Black()); 
   MPPCLW->SetVisAttributes(visAttributes);
+  local_xLW->SetVisAttributes(visAttributes);
+  local_yLW->SetVisAttributes(visAttributes);
+  
   fVisAttributes.push_back(visAttributes);
 
   logicFocus->SetVisAttributes(visAttributes);
   fVisAttributes.push_back(visAttributes);
   
 
-  visAttributes = new G4VisAttributes(G4Color::Brown()); 
+  visAttributes = new G4VisAttributes(G4Color::Black()); 
   ReflectLW->SetVisAttributes(visAttributes);
   
   BehindLW->SetVisAttributes(visAttributes);
@@ -708,9 +739,9 @@ void BACDetectorConstruction::ConstructSDandField()
   Aero1LW->SetSensitiveDetector(aeroSD);
   Aero2LW->SetSensitiveDetector(aeroSD);
   Aero3LW->SetSensitiveDetector(aeroSD);
+  
 
-
-
+  
 
 
   auto mppcSD = new MPPCSD("mppcSD");

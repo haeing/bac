@@ -39,6 +39,15 @@ BACStackingAction::ClassifyNewTrack(const G4Track * aTrack)
   const G4double c = 3.0e+8;
 
 
+  //for view
+  if (aTrack->GetDefinition() == G4OpticalPhoton::Definition()) {
+
+     
+        if (G4UniformRand() > 0.2) {
+            return fKill;
+        }
+    }
+
   if(aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
     if(aTrack->GetTouchable()->GetVolume()->GetCopyNo() ==123){
       { // particle is optical photon

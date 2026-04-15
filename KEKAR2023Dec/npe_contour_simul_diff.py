@@ -3,6 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 from scipy.ndimage import gaussian_filter
+import matplotlib as mpl
+mpl.rcParams['font.family'] = 'Times New Roman'
+mpl.rcParams['mathtext.fontset'] = 'stix'
+mpl.rcParams['axes.unicode_minus'] = False
 
 ROOT.gROOT.SetBatch(True)
 
@@ -65,7 +69,7 @@ NLEVELS = 15
 FIGSIZE = (7.8, 6.8)
 
 SHOW_BOX_TEXT = True
-BOX_TEXT_FONTSIZE = 8
+BOX_TEXT_FONTSIZE = 10
 BOX_EDGE_COLOR = "white"
 BOX_EDGE_ALPHA = 1
 USE_TEXT_BBOX = True

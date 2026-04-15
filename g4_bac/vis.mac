@@ -33,6 +33,8 @@
 # viewing in a VRML viewer:
 #/vis/open VRML2FILE
 #
+
+/vis/viewer/set/background 1 1 1
 # Disable auto refresh and quieten vis messages whilst scene and
 # trajectories are established:
 /vis/viewer/set/autoRefresh true

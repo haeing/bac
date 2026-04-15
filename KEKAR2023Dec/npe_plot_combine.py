@@ -3,6 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle, Ellipse
 from scipy.optimize import curve_fit
+import matplotlib as mpl
+mpl.rcParams['font.family'] = 'Times New Roman'
+mpl.rcParams['mathtext.fontset'] = 'stix'
+mpl.rcParams['axes.unicode_minus'] = False
 
 ROOT.gROOT.SetBatch(True)
 
@@ -305,7 +309,7 @@ def build_gaussian_map(m, xs, ys, x_centers, y_centers, sigma_x=7.0, sigma_y=9.0
 # ---------------------------------------------------------
 def add_beam_sigma_ellipses(ax, fit, sigma_levels=(1, 2),
                             edgecolor="red", linewidth=1.8,
-                            label_fontsize=15):
+                            label_fontsize=20):
     x0 = fit["x0"]
     y0 = fit["y0"]
     sx = fit["sx"]
@@ -412,7 +416,7 @@ def plot_area_averaged_contour_map_smooth(
             sigma_levels=BEAM_SIGMA_LEVELS,
             edgecolor="red",
             linewidth=1.8,
-            label_fontsize=12
+            label_fontsize=20
         )
 
     ax.set_xlabel("X [mm]",fontsize=16)

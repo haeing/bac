@@ -68,6 +68,8 @@ private:
   G4VPhysicalVolume* physDetect;
 
 
+  G4LogicalVolume* frameworld;
+  G4LogicalVolume* mppcworld;
   G4LogicalVolume* Aero1LW;
   G4LogicalVolume* Aero2LW;
   G4LogicalVolume* Aero3LW;
@@ -89,6 +91,10 @@ private:
 
   G4LogicalVolume* UpstreamLW;
   G4LogicalVolume* DownstreamLW;
+
+  G4LogicalVolume* local_xLW;
+  G4LogicalVolume* local_yLW;
+  G4LogicalVolume* bottomframeLW;
 
 
 

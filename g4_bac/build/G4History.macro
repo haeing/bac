@@ -3,6 +3,7 @@
 /vis/sceneHandler/create OGL
 /vis/viewer/create ! ! 1200x1200-0+0
 /vis/viewer/refresh
+/vis/viewer/set/background 1 1 1
 /vis/viewer/set/autoRefresh true
 /vis/verbose errors
 /vis/drawVolume
@@ -63,4 +64,3 @@
 /vis/viewer/refresh
 /vis/viewer/set/hiddenEdge 0
 /vis/viewer/refresh
-/run/beamOn 1

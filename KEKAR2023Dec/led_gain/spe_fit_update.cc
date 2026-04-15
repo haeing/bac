@@ -417,6 +417,7 @@ void spe_fit_update(int board, int channel){
   hOn->SetLineColor(kBlack);
   hOn->SetLineWidth(2);
   hOn->Draw("hist");
+  hOn->SetTitle(";ADC [ch];Counts");
 
   //int Ndraw = std::min(gNmax, 8);
   int Ndraw = gNmax;
@@ -437,7 +438,8 @@ void spe_fit_update(int board, int channel){
 
   TF1* fn[Ndraw];
 
-  for(int n=0;n<Ndraw;++n){
+  //for(int n=0;n<Ndraw;++n){
+  for(int n=0;n<7;++n){
     gCompN = n;
     TString nm;
     nm.Form("fn%d", n);

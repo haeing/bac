@@ -2,6 +2,13 @@
 import os
 import schemdraw
 import schemdraw.elements as elm
+schemdraw.config(font='Times New Roman')
+import matplotlib.pyplot as plt
+plt.rcParams['font.family'] = 'Times New Roman'
+plt.rcParams['mathtext.fontset'] = 'stix'
+plt.rcParams['mathtext.rm'] = 'Times New Roman'
+plt.rcParams['mathtext.it'] = 'Times New Roman:italic'
+plt.rcParams['mathtext.bf'] = 'Times New Roman:bold'
 
 # ---------- utility: rectangle using 4 lines (old schemdraw safe) ----------
 def box(d, x, y, w, h, lw=1.2):
@@ -161,12 +168,12 @@ def draw_ad8000_stage(d, in_pt, RF_label=r'$22\,\Omega$', Cout_label='C53\n0.1u'
 # ===================== main =====================
 if __name__ == '__main__':
     VBIAS = 'Vbias'
-    R_SER = r'$22\,\Omega$'
+    R_SER = '$22\,\Omega$'
     C_SER = '100 pF'
-    R_PAR = r'$390\,\Omega$'
-    RF    = r'$10\,\mathrm{k}\Omega$'
-    COUT  = r'$0.1\,\mu\mathrm{F}$'
-    OPAMP = 'AD8000'
+    R_PAR = '$390\,\Omega$'
+    RF    = '$10\,\mathrm{k}\Omega$'
+    COUT  = '$0.1\,\mu\mathrm{F}$'
+    OPAMP = 'Op. Amp'
 
     d = schemdraw.Drawing()
 

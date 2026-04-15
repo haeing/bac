@@ -127,6 +127,7 @@ int main(int argc,char** argv)
   //auto opticalParams = G4OpticalParameters::Instance();
   //opticalParams->SetCerenkovTrackSecondariesFirst(true);
   opticalPhysics->SetTrackSecondariesFirst(kCerenkov,true);
+  
   physicsList->RegisterPhysics(opticalPhysics);
   
 
