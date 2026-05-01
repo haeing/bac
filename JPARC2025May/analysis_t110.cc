@@ -10,7 +10,7 @@
 
 bool kaon = false;
 
-int npe_threshold = 5;
+int npe_threshold = -15;
 const double T0_z = -1100.0;
 const double BH2_z = -554.62;
 const double BAC_z = -1041.63;
@@ -29,7 +29,7 @@ const double bh2_x = 14.;
 const double bh2_y = 100.;
 
 const double bac_tdc_min = 730000.;
-const double bac_tdc_max = 750000.;
+const double bac_tdc_max = 740000.;
 
 const double tdc_step = 100.;
 
@@ -201,7 +201,7 @@ void analysis_t110(int runnumber, int runnumber_ped)
   
 
   
-  TString dir = "/gpfs/group/had/sks/Users/haein/JPARC2025May_root";
+  TString dir = "/gpfs/group/had/sks/Users/haein/data/JPARC2025May_root";
   TFile *file = new TFile(Form("%s/run00%d_Hodoscope.root",dir.Data(),runnumber));
   TTree *data = (TTree*)file->Get("hodo");
 
@@ -331,6 +331,7 @@ void analysis_t110(int runnumber, int runnumber_ped)
 
   TH1D *hist_bac_npe[NumOfSegBAC];
   TH1D *hist_bac_npe_s = new TH1D("hist_bac_npe_s","hist_bac_npe_s",100,-10,90);
+  TH1D *hist_bac_npe_s_pass = new TH1D("hist_bac_npe_s_pass","hist_bac_npe_s_pass",100,-10,90);
   TH1D *hist_bac_npe_s_bh2[NumOfSegBH2];
   TH1D *hist_bac_npe_s_bh2_pass[NumOfSegBH2];
   TH1D *hist_bac_tdc_s = new TH1D("hist_bac_tdc_s","hist_bac_tdc_s",(bac_tdc_max - bac_tdc_min)/tdc_step,bac_tdc_min,bac_tdc_max);
@@ -395,8 +396,16 @@ void analysis_t110(int runnumber, int runnumber_ped)
       hist_bac_npe[i]->Fill(((*bac_adc_u)[i]-bac_ped_mean[i])/bac_gain[i]*(1-bac_pxt[i]));
       bac_npe+=((*bac_adc_u)[i]-bac_ped_mean[i])/bac_gain[i]*(1-bac_pxt[i]);
     }
-    for(int j=0;j<(*bac_tdc_u)[4].size();j++)hist_bac_tdc_s->Fill((*bac_tdc_u)[4][j]);
+    for(int j=0;j<(*bac_tdc_u)[4].size();j++){
+      hist_bac_tdc_s->Fill((*bac_tdc_u)[4][j]);
+    }
     hist_bac_npe_s->Fill(bac_npe);
+    for(int j=0;j<(*bac_tdc_u)[4].size();j++){
+      if((*bac_tdc_u)[4][j]>bac_tdc_cut[0] && (*bac_tdc_u)[4][j]<bac_tdc_cut[1]){
+	hist_bac_npe_s_pass->Fill(bac_npe);
+      }
+    }
+    
   }
   
   
@@ -509,8 +518,26 @@ void analysis_t110(int runnumber, int runnumber_ped)
   }
   c1->cd(5);
   hist_bac_npe_s->Draw();
+  hist_bac_npe_s_pass->SetLineColor(kRed);
+  hist_bac_npe_s_pass->SetFillColor(kRed);
+  hist_bac_npe_s_pass->Draw("same");
   c1->cd(6);
   hist_bac_tdc_s->Draw();
+  c1->Print(out_pdf);
+  c1->Clear();
+  auto eff = new TEfficiency(*hist_bac_npe_s_pass, *hist_bac_npe_s);
+  TF1* fturn = new TF1("fturn",
+		       "[0] + [1]/(1.0 + exp(-(x-[2])/[3]))",
+		       -10, 50);
+  // [0]: noise floor, [1]: amplitude, [2]: turn-on center, [3]: width
+  fturn->SetParameters(0.02, 0.95, 5.0, 1.0);
+  auto gr = eff->CreateGraph();
+  gr->Fit(fturn, "R");
+  c1->Divide(2);
+  c1->cd(1);
+  eff->Draw("AP");
+  c1->cd(2);
+  gr->Draw("AP");
   c1->Print(out_pdf);
 
   //Efficiency, Npe check
@@ -648,7 +675,8 @@ void analysis_t110(int runnumber, int runnumber_ped)
 
   //Make beam file for simulation
   
-  TFile *file_beam_old = new TFile("/home/had/haein/Work/E72/Simul/k18geant4/hyptpc-11.0.2/param/BEAM/beam.k.run69_0130.root");
+  //TFile *file_beam_old = new TFile("/home/had/haein/Work/E72/Simul/k18geant4/hyptpc-11.0.2/param/BEAM/beam.k.run69_0130.root");
+  TFile *file_beam_old = new TFile("/hsm/had/sks/E72/JPARC2025Nov/beam_simul/beam.k.run69_0130.root");
   TTree *tree_beam_old = (TTree*)file_beam_old->Get("tr");
   double pInx,pIny,pInz;
   tree_beam_old->SetBranchAddress("pInx",&pInx);
@@ -799,6 +827,9 @@ void analysis_t110(int runnumber, int runnumber_ped)
   //c4->Print(out_pdf);
   c1->Print(out_pdf);
 
+
+  //Threshold check
+  
   //BAC x cut end
 
 
@@ -845,6 +876,7 @@ void analysis_t110(int runnumber, int runnumber_ped)
   //Save graphs
   TFile* f_graph = new TFile(Form("t110_graph_%d.root",runnumber),"RECREATE");
   g_bac_npe_mean->Write("g_bac_npe_mean");
+  gr->Write("g_thr");
   g_eff->Write("g_eff");
   f_graph->Close();
   
