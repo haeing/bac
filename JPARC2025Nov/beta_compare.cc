@@ -15,6 +15,8 @@
 #include "TStyle.h"
 #include "TMath.h"
 
+
+const double npe_factor = 37.5266 / 424.576;
 struct RunInfo {
   int run;
   double mom; // MeV/c
@@ -58,21 +60,17 @@ void beta_compare(){
       continue;
     }
 
-    // fit을 위해 clone
     TH1* hfit = dynamic_cast<TH1*>(h->Clone(Form("h_run%d", r.run)));
     hfit->SetDirectory(0);
     fin->Close();
 
-    // peak 자동 탐색
     int maxBin = hfit->GetMaximumBin();
     double peakX = hfit->GetBinCenter(maxBin);
     double rms   = hfit->GetRMS();
 
-    // 너무 넓거나 좁지 않게 fit 범위 설정
     double fitMin = peakX - 1.0 * rms;
     double fitMax = peakX + 1.0 * rms;
 
-    // 보호장치
     if (rms <= 0) {
       fitMin = peakX - 5.0;
       fitMax = peakX + 5.0;
@@ -84,13 +82,11 @@ void beta_compare(){
     TF1* fgaus = new TF1(Form("fgaus_%d", r.run), "gaus", fitMin, fitMax);
     fgaus->SetParameters(hfit->GetMaximum(), peakX, (rms > 0 ? rms/2.0 : 2.0));
 
-    // 먼저 조용히 fit
     hfit->Fit(fgaus, "RQ0");
 
-    // 첫 fit 결과 기반으로 fit 범위 재조정
     double mean1  = fgaus->GetParameter(1);
     double sigma1 = std::fabs(fgaus->GetParameter(2));
-
+    
     double refitMin = mean1 - 1.5 * sigma1;
     double refitMax = mean1 + 1.5 * sigma1;
 
@@ -113,7 +109,7 @@ void beta_compare(){
               << std::endl;
 
     x.push_back(invbeta2);
-    y.push_back(mean);
+    y.push_back(mean*npe_factor);
     ex.push_back(0.0);
     ey.push_back(meanErr);
   }
