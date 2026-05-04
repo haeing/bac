@@ -520,6 +520,8 @@ void analysis_t110(int runnumber, int runnumber_ped)
   hist_bac_npe_s->Draw();
   hist_bac_npe_s_pass->SetLineColor(kRed);
   hist_bac_npe_s_pass->SetFillColor(kRed);
+  auto g_bac_npe_s_pass = new TF1("g_bac_npe_s_pass","gaus(0)",20,50);
+  hist_bac_npe_s_pass->Fit(g_bac_npe_s_pass,"R");
   hist_bac_npe_s_pass->Draw("same");
   c1->cd(6);
   hist_bac_tdc_s->Draw();
