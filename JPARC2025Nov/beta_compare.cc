@@ -37,9 +37,9 @@ void beta_compare(){
     {1928, 735},
     {2489, 1000},
     {2502, 814},
-    //{2509, 645},
-    {2512, 400},
-    {2514, 300}
+    {2509, 645},
+    {2512, 400}
+    //{2514, 300} //No Cherenkov light
   };
 
   std::vector<double> x, y, ex, ey;
@@ -72,7 +72,7 @@ void beta_compare(){
       continue;
     }
 
-    TH1* h = dynamic_cast<TH1*>(fin->Get("hist_bac_npe_s_pass"));
+    TH1* h = dynamic_cast<TH1*>(fin->Get("hist_bac_npe_s_bh2_pass7"));
     if (!h) {
       std::cerr << "Histogram hist_bac_npe_s_pass not found in " << fname << std::endl;
       fin->Close();
@@ -82,6 +82,7 @@ void beta_compare(){
     TH1* hfit = dynamic_cast<TH1*>(h->Clone(Form("h_run%d", r.run)));
     hfit->SetDirectory(0);
     fin->Close();
+
 
     int maxBin = hfit->GetMaximumBin();
     double peakX = hfit->GetBinCenter(maxBin);
@@ -98,12 +99,32 @@ void beta_compare(){
     if (fitMin < hfit->GetXaxis()->GetXmin()) fitMin = hfit->GetXaxis()->GetXmin();
     if (fitMax > hfit->GetXaxis()->GetXmax()) fitMax = hfit->GetXaxis()->GetXmax();
 
+    if(r.run == 1928){
+      fitMin = 300;
+      fitMax = 550;
+    }
+    else if(r.run == 2489){
+      fitMin = 300;
+      fitMax = 600;
+    }
+    else if(r.run == 2502){
+      fitMin = 300;
+      fitMax = 550;
+    }
+    else if(r.run == 2509){
+      fitMin = 350;
+      fitMax = 600;
+    }
+    else if(r.run ==2512){
+      fitMin = 150;
+      fitMax = 300;
+    }
+    
     TF1 * fgaus;
-    if(r.run == 2489)fgaus = new TF1(Form("fgaus_%d", r.run), "gaus", 200, 800);
-    else{fgaus = new TF1(Form("fgaus_%d", r.run), "gaus", fitMin, fitMax);}
-    fgaus->SetParameters(hfit->GetMaximum(), peakX, (rms > 0 ? rms/2.0 : 2.0));
+    fgaus = new TF1(Form("fgaus_%d", r.run), "gaus", fitMin, fitMax);
+    //fgaus->SetParameters(hfit->GetMaximum(), peakX, (rms > 0 ? rms/2.0 : 2.0));
 
-    hfit->Fit(fgaus, "RQ0");
+    hfit->Fit(fgaus, "RQ");
     c1->Clear();
     hfit->Draw();
     c1->Print(out_pdf);
