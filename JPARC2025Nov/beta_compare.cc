@@ -34,12 +34,14 @@ void beta_compare(){
   // 조건:
   // particle = pi, trig = beam, threshold = 30 인 run만 사용
   std::vector<RunInfo> runs = {
-    {1928, 735},
     {2489, 1000},
+    {2585, 933},
     {2502, 814},
+    {2587, 755}
+    {2569, 735},
+    {2589, 715},
     {2509, 645},
     {2512, 400}
-    //{2514, 300} //No Cherenkov light
   };
 
   std::vector<double> x, y, ex, ey;

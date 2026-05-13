@@ -176,7 +176,7 @@ void analysis_e72(int runnumber, int runnumber_ped)
   
 
   
-  TString dir = "/gpfs/group/had/sks/Users/haein/JPARC2025Nov_root";
+  TString dir = "/gpfs/group/had/sks/Users/haein/data/JPARC2025Nov_root/bac_study";
   TFile *file = new TFile(Form("%s/run0%d_Hodoscope.root",dir.Data(),runnumber));
   TTree *data = (TTree*)file->Get("hodo");
 
