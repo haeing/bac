@@ -490,7 +490,7 @@ void analysis_e72(int runnumber, int runnumber_ped)
 
   //Make beam file for simulation
   
-  TFile *file_beam_old = new TFile("/home/had/haein/Work/E72/Simul/k18geant4/hyptpc-11.0.2/param/BEAM/beam.k.run69_0130.root");
+  TFile *file_beam_old = new TFile("/home/had/haein/work/e72/simul/e72/hyptpc-11.0.2/param/BEAM/beam_simul/beam.k.run69_0130.root");
   TTree *tree_beam_old = (TTree*)file_beam_old->Get("tr");
   double pInx,pIny,pInz;
   tree_beam_old->SetBranchAddress("pInx",&pInx);

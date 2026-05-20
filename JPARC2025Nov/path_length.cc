@@ -31,7 +31,8 @@ void path_length(){
       TParticle &p_bac = (*BAC)[j];
       g_track->SetPoint(g_track->GetN(),p_bac.Vz(),p_bac.Vx());
       g_track->SetMarkerStyle(20);
-      mg->Add(g_track,"APL");
+      if(n%1000==0)
+	mg->Add(g_track,"APL");
       hist_pos->Fill(p_bac.Vz(),p_bac.Vx());
       if(j>0){
 	TParticle &p1 = (*BAC)[j-1];

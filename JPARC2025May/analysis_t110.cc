@@ -335,6 +335,8 @@ void analysis_t110(int runnumber, int runnumber_ped)
   TH1D *hist_bac_npe_s_bh2[NumOfSegBH2];
   TH1D *hist_bac_npe_s_bh2_pass[NumOfSegBH2];
   TH1D *hist_bac_tdc_s = new TH1D("hist_bac_tdc_s","hist_bac_tdc_s",(bac_tdc_max - bac_tdc_min)/tdc_step,bac_tdc_min,bac_tdc_max);
+  TH1D *hist_btof = new TH1D("hist_btof","hist_btof",100, -2,7);
+  TH1D *hist_btof_pass = new TH1D("hist_btof_pass","hist_btof_pass",100,-2,7);
 
   TF1 *f_bac_npe_s_bh2[NumOfSegBH2];
 
@@ -400,9 +402,11 @@ void analysis_t110(int runnumber, int runnumber_ped)
       hist_bac_tdc_s->Fill((*bac_tdc_u)[4][j]);
     }
     hist_bac_npe_s->Fill(bac_npe);
+    hist_btof->Fill(btof0*-1);
     for(int j=0;j<(*bac_tdc_u)[4].size();j++){
       if((*bac_tdc_u)[4][j]>bac_tdc_cut[0] && (*bac_tdc_u)[4][j]<bac_tdc_cut[1]){
 	hist_bac_npe_s_pass->Fill(bac_npe);
+	hist_btof_pass->Fill(btof0*-1);
       }
     }
     
@@ -522,7 +526,7 @@ void analysis_t110(int runnumber, int runnumber_ped)
   hist_bac_npe_s_pass->SetFillColor(kRed);
   auto g_bac_npe_s_pass = new TF1("g_bac_npe_s_pass","gaus(0)",20,50);
   hist_bac_npe_s_pass->Fit(g_bac_npe_s_pass,"R");
-  hist_bac_npe_s_pass->Draw("same");
+  //hist_bac_npe_s_pass->Draw("same");
   c1->cd(6);
   hist_bac_tdc_s->Draw();
   c1->Print(out_pdf);
@@ -725,9 +729,11 @@ void analysis_t110(int runnumber, int runnumber_ped)
     } //T0 cut end
 
     //BH2, BAC cut start w/ BcOut
+    int seg_bh2 = -9999;
     for(int i=0;i<NumOfSegBH2;i++){
       bh2_pass[i] = false;
       bac_pass[i] = false;
+      
       if((*bh2_adc_u)[i]>bh2_adc_cut[0][i] && (*bh2_adc_d)[i]>bh2_adc_cut[1][i]){
 	for(int j=0;j<(*bh2_tdc_s).size();j++){
 	  if((*bh2_tdc_s)[i][j]>bh2_tdc_cut[i][0] && (*bh2_tdc_s)[i][j]<bh2_tdc_cut[i][1]){
@@ -736,6 +742,7 @@ void analysis_t110(int runnumber, int runnumber_ped)
 	    if((*x0)[0]+BH2_z*(*u0)[0] > bh2_seg_x_min && (*x0)[0]+BH2_z*(*u0)[0] < bh2_seg_x_max){
 	      if((*y0)[0]+BH2_z*(*v0)[0] > -1*bh2_y/2. && (*y0)[0] < bh2_y/2.){
 		bh2_pass[i] = true;
+		seg_bh2 = i;
 		break;
 	      }
 	    }
@@ -745,13 +752,17 @@ void analysis_t110(int runnumber, int runnumber_ped)
       if((*x0)[0]+BAC_z*(*u0)[0] > bac_x_cut[i][0] && (*x0)[0]+BAC_z*((*u0)[0] < bac_x_cut[i][1])){
 	bac_pass[i] = true;
       }
+      else{seg_bh2 = -9999;}
     } //BH2 cut end
+
     
       
     
     if(t0_pass_count==0)continue;
     //Pure one track cut
     if(ntrack != 1)continue;
+
+    if(seg_bh2 == -9999)continue;
     
     for(int i=0;i<NumOfSegBH2;i++){
       if(bh2_pass[i] && bac_pass[i]){
@@ -775,11 +786,13 @@ void analysis_t110(int runnumber, int runnumber_ped)
 	  bac_npe+=((*bac_adc_u)[j]-bac_ped_mean[j])/bac_gain[j]*(1-bac_pxt[j]);
 	}
 	hist_bac_npe_s_bh2[i]->Fill(bac_npe);
+	
 	//BAC npe cut offline
 	if(bac_npe <npe_threshold)continue;
 	for(int j=0;j<(*bac_tdc_u).size();j++){
 	  if((*bac_tdc_u)[4][j]>bac_tdc_cut[0] && (*bac_tdc_u)[4][j]<bac_tdc_cut[1]){
 	    hist_bac_npe_s_bh2_pass[i]->Fill(bac_npe);
+	    
 	    eff_pass[i]++;
 	    break;
 	  }
@@ -874,6 +887,12 @@ void analysis_t110(int runnumber, int runnumber_ped)
   g_eff->GetXaxis()->SetTitleSize(0.1);
   g_eff->GetYaxis()->SetTitleSize(0.1);
   g_eff->Draw("AP");
+  c5->Print(out_pdf);
+  c5->Clear();
+  c5->SetLogy();
+  hist_btof->Draw();
+  hist_btof_pass->SetFillColor(kRed);
+  hist_btof_pass->Draw("same");
   c5->Print(out_pdf + ")");
   //Save graphs
   TFile* f_graph = new TFile(Form("t110_graph_%d.root",runnumber),"RECREATE");
