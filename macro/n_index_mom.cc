@@ -4,8 +4,11 @@ void n_index_mom()
   const double n_aero = 1.115;
   const double pmin = 250.0;
   const double pmax = 1500.0;
-  const double sep_p1 = 625.0;
-  const double sep_p2 = 970.0;
+  //const double sep_p1 = 625.0;
+  //const double sep_p2 = 970.0;
+
+  const double sep_p1 = 700.0;
+  const double sep_p2 = 800.0;
 
   const double m_pi = 139.57039;
   const double m_K  = 493.677;

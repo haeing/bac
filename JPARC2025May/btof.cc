@@ -2,7 +2,7 @@ void btof(){
   gROOT->SetBatch(false);
   
   int runnumber = 344;
-  TString dir = "/gpfs/group/had/sks/Users/haein/JPARC2025May_root";
+  TString dir = "/gpfs/group/had/sks/Users/haein/data/JPARC2025May_root";
   TFile *file = new TFile(Form("%s/run00%d_Hodoscope.root",dir.Data(),runnumber));
   TTree *data = (TTree*)file->Get("hodo");
 
@@ -20,5 +20,5 @@ void btof(){
   h_btof->Draw();
   h_btof->SetLineColor(kBlack);
   c1->SetLogy();
-  //c1->SaveAs("btof.pdf");
+  c1->SaveAs("btof.pdf");
 }

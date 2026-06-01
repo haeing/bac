@@ -31,6 +31,12 @@ const double bh2_y = 100.;
 const double bac_tdc_min = 730000.;
 const double bac_tdc_max = 740000.;
 
+const double kvc_tdc_min = 710000.;
+const double kvc_tdc_max = 725000.;
+
+const double sac_tdc_min = 680000.;
+const double sac_tdc_max = 700000.;
+
 const double tdc_step = 100.;
 
 struct WStat {
@@ -233,6 +239,14 @@ void analysis_t110(int runnumber, int runnumber_ped)
   vector<double>* bac_adc_u = nullptr;
   vector<vector<double>>* bac_tdc_u = nullptr;
 
+  vector<double>* sac_adc_u = nullptr;
+  vector<vector<double>>* sac_tdc_u = nullptr;
+
+  vector<double>* kvc2_adc_s = nullptr;
+  //vector<vector<double>>* kvc_tdc_s = nullptr;
+
+  
+
   data->SetBranchAddress("btof0",&btof0);
   
   data->SetBranchAddress("t0_adc_u",&t0_adc_u);
@@ -246,11 +260,17 @@ void analysis_t110(int runnumber, int runnumber_ped)
   data->SetBranchAddress("bac_adc_u",&bac_adc_u);
   data->SetBranchAddress("bac_tdc_u",&bac_tdc_u);
 
+  data->SetBranchAddress("sac_adc_u",&sac_adc_u);
+  data->SetBranchAddress("sac_tdc_u",&sac_tdc_u);
+  
+  data->SetBranchAddress("kvc2_adc_s",&kvc2_adc_s);
+  //data->SetBranchAddress("kvc2_tdc_s",&kvc2_tdc_s);
+  
   vector<double>* x0 = nullptr;
   vector<double>* y0 = nullptr;
   vector<double>* u0 = nullptr;
   vector<double>* v0 = nullptr;
-
+  
   int ntrack;
 
   bcout->SetBranchAddress("ntrack",&ntrack);
@@ -328,10 +348,11 @@ void analysis_t110(int runnumber, int runnumber_ped)
   TF1 *f_bh2_adc_u[NumOfSegBH2];
   TF1 *f_bh2_adc_d[NumOfSegBH2];
   TF1 *f_bh2_tdc_s[NumOfSegBH2];
-
+  
   TH1D *hist_bac_npe[NumOfSegBAC];
   TH1D *hist_bac_npe_s = new TH1D("hist_bac_npe_s","hist_bac_npe_s",100,-10,90);
   TH1D *hist_bac_npe_s_pass = new TH1D("hist_bac_npe_s_pass","hist_bac_npe_s_pass",100,-10,90);
+  TH1D *hist_bac_npe_s_kaon = new TH1D("hist_bac_npe_s_kaon","hist_bac_npe_s_kaon",100,-10,90);
   TH1D *hist_bac_npe_s_bh2[NumOfSegBH2];
   TH1D *hist_bac_npe_s_bh2_pass[NumOfSegBH2];
   TH1D *hist_bac_tdc_s = new TH1D("hist_bac_tdc_s","hist_bac_tdc_s",(bac_tdc_max - bac_tdc_min)/tdc_step,bac_tdc_min,bac_tdc_max);
@@ -343,6 +364,14 @@ void analysis_t110(int runnumber, int runnumber_ped)
   TH2D *hist_bcout_bh2_2d[NumOfSegBH2];
   TH2D *hist_bcout_bac_2d[NumOfSegBH2];
   TH1D *hist_bcout_bac[NumOfSegBH2];
+
+  TH1D *hist_sac_adc = new TH1D("hist_sac_adc","hist_sac_adc",100,0,1000);
+  TH1D *hist_sac_tdc = new TH1D("hist_sac_tdc","hist_sac_tdc",100,sac_tdc_min,sac_tdc_max);
+  TH2D *hist_bac_sac = new TH2D("hist_bac_sac","hist_bac_sac",100,0,1400,100,0,300);
+  
+  for(int i=0;i<4;i++){
+    //hist_kvc_adc[i] = new TH1D(Form("hist_kvc_adc%d",i),Form("hist_kvc_adc%d",i),
+  }
   
   for(int i=0;i<NumOfSegT0;i++){
     hist_t0_adc_u[i] = new TH1D(Form("hist_t0_adc_u%d",i),Form("hist_t0_adc_u%d",i),250,100,350);
@@ -377,6 +406,10 @@ void analysis_t110(int runnumber, int runnumber_ped)
     data->GetEntry(n);
     if(kaon){
       if(btof0 >-4)continue;
+      for(int j=0;j<(*sac_tdc_u)[8].size();j++){
+	if((*sac_tdc_u)[8][j]>684000 && (*sac_tdc_u)[8][j] <688000)continue;
+      }
+      if((*sac_adc_u)[8]>120)continue;
     }
     if(n%10000 == 0)cout<<"Entry "<<n<<std::endl;
     for(int i=0;i<NumOfSegT0;i++){
@@ -394,19 +427,28 @@ void analysis_t110(int runnumber, int runnumber_ped)
       }
     }
     double bac_npe = 0;
+    double bac_adc = 0;
     for(int i=0;i<NumOfSegBAC;i++){
       hist_bac_npe[i]->Fill(((*bac_adc_u)[i]-bac_ped_mean[i])/bac_gain[i]*(1-bac_pxt[i]));
       bac_npe+=((*bac_adc_u)[i]-bac_ped_mean[i])/bac_gain[i]*(1-bac_pxt[i]);
+      bac_adc+=((*bac_adc_u)[i]-bac_ped_mean[i]);
     }
     for(int j=0;j<(*bac_tdc_u)[4].size();j++){
       hist_bac_tdc_s->Fill((*bac_tdc_u)[4][j]);
     }
     hist_bac_npe_s->Fill(bac_npe);
-    hist_btof->Fill(btof0*-1);
+
+    //check sac bac correlation
+    
+    hist_bac_sac->Fill(bac_adc,(*sac_adc_u)[8]);
+    hist_sac_adc->Fill((*sac_adc_u)[8]);
+    for(int j=0;j<(*sac_tdc_u)[8].size();j++)
+      hist_sac_tdc->Fill((*sac_tdc_u)[8][j]);
+    //hist_btof->Fill(btof0*-1);
     for(int j=0;j<(*bac_tdc_u)[4].size();j++){
       if((*bac_tdc_u)[4][j]>bac_tdc_cut[0] && (*bac_tdc_u)[4][j]<bac_tdc_cut[1]){
 	hist_bac_npe_s_pass->Fill(bac_npe);
-	hist_btof_pass->Fill(btof0*-1);
+	//hist_btof_pass->Fill(btof0*-1);
       }
     }
     
@@ -522,11 +564,12 @@ void analysis_t110(int runnumber, int runnumber_ped)
   }
   c1->cd(5);
   hist_bac_npe_s->Draw();
-  hist_bac_npe_s_pass->SetLineColor(kRed);
-  hist_bac_npe_s_pass->SetFillColor(kRed);
+  //hist_bac_npe_s_kaon->Draw();
+  //hist_bac_npe_s_pass->SetLineColor(kRed);
+  //hist_bac_npe_s_pass->SetFillColor(kRed);
   auto g_bac_npe_s_pass = new TF1("g_bac_npe_s_pass","gaus(0)",20,50);
   hist_bac_npe_s_pass->Fit(g_bac_npe_s_pass,"R");
-  //hist_bac_npe_s_pass->Draw("same");
+  //hist_bac_npe_s_pass->Draw();
   c1->cd(6);
   hist_bac_tdc_s->Draw();
   c1->Print(out_pdf);
@@ -560,6 +603,11 @@ void analysis_t110(int runnumber, int runnumber_ped)
     bcout->GetEntry(n);
     if(kaon){
       if(btof0 >-4)continue;
+      for(int j=0;j<(*sac_tdc_u)[8].size();j++){
+	if((*sac_tdc_u)[8][j]>684000 && (*sac_tdc_u)[8][j] <688000)continue;
+      }
+      if((*sac_adc_u)[8]>120)continue;
+      
     }
     //T0 cut start
     t0_pass_count = 0;
@@ -602,15 +650,18 @@ void analysis_t110(int runnumber, int runnumber_ped)
     for(int i=0;i<NumOfSegBH2;i++){
       if(bh2_pass[i]){
 	//eff_total[i]++;
+	hist_btof->Fill(btof0*-1);
 	double bac_npe = 0;
 	for(int j=0;j<NumOfSegBAC;j++){
 	  bac_npe+=((*bac_adc_u)[j]-bac_ped_mean[j])/bac_gain[j]*(1-bac_pxt[j]);
+	  
 	}
 	//hist_bac_npe_s_bh2[i]->Fill(bac_npe);
 	for(int j=0;j<(*bac_tdc_u).size();j++){
 	  if((*bac_tdc_u)[4][j]>bac_tdc_cut[0] && (*bac_tdc_u)[4][j]<bac_tdc_cut[1]){
 	    //hist_bac_npe_s_bh2_pass[i]->Fill(bac_npe);
 	    //eff_pass[i]++;
+	    hist_btof_pass->Fill(btof0*-1);
 	    break;
 	  }
 	}
@@ -712,7 +763,13 @@ void analysis_t110(int runnumber, int runnumber_ped)
     bcout->GetEntry(n);
     if(kaon){
       if(btof0 >-4)continue;
+      for(int j=0;j<(*sac_tdc_u)[8].size();j++){
+	if((*sac_tdc_u)[8][j]>684000 && (*sac_tdc_u)[8][j] <688000)continue;
+      }
+      //if((*sac_adc_u)[8]>120)continue;
+
     }
+    
     //T0 cut start
     t0_pass_count = 0;
     for(int i=0;i<NumOfSegT0;i++){
@@ -727,10 +784,12 @@ void analysis_t110(int runnumber, int runnumber_ped)
 	}
       }
     } //T0 cut end
+    
 
     //BH2, BAC cut start w/ BcOut
     int seg_bh2 = -9999;
     for(int i=0;i<NumOfSegBH2;i++){
+      cout<<"i"<<endl;
       bh2_pass[i] = false;
       bac_pass[i] = false;
       
@@ -756,7 +815,7 @@ void analysis_t110(int runnumber, int runnumber_ped)
     } //BH2 cut end
 
     
-      
+    
     
     if(t0_pass_count==0)continue;
     //Pure one track cut
@@ -786,6 +845,7 @@ void analysis_t110(int runnumber, int runnumber_ped)
 	  bac_npe+=((*bac_adc_u)[j]-bac_ped_mean[j])/bac_gain[j]*(1-bac_pxt[j]);
 	}
 	hist_bac_npe_s_bh2[i]->Fill(bac_npe);
+	hist_bac_npe_s_kaon->Fill(bac_npe);
 	
 	//BAC npe cut offline
 	if(bac_npe <npe_threshold)continue;
@@ -893,12 +953,28 @@ void analysis_t110(int runnumber, int runnumber_ped)
   hist_btof->Draw();
   hist_btof_pass->SetFillColor(kRed);
   hist_btof_pass->Draw("same");
+  c5->Print(out_pdf);
+  c5->Clear();
+  c5->SetLogy(false);
+  hist_bac_sac->Draw("colz");
+  c5->Print(out_pdf);
+  c5->Clear();
+  c5->Divide(2);
+  c5->cd(1);
+  hist_sac_adc->Draw("colz");
+  c5->cd(2);
+  hist_sac_tdc->Draw("colz");
+  c5->Print(out_pdf);
+  c5->Clear();
+  hist_bac_npe_s_kaon->Draw();
   c5->Print(out_pdf + ")");
   //Save graphs
   TFile* f_graph = new TFile(Form("t110_graph_%d.root",runnumber),"RECREATE");
   g_bac_npe_mean->Write("g_bac_npe_mean");
   gr->Write("g_thr");
   g_eff->Write("g_eff");
+  hist_btof->Write();
+  hist_bac_npe_s_pass->Write();
   f_graph->Close();
   
   
