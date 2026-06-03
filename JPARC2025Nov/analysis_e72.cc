@@ -269,10 +269,6 @@ void analysis_e72(int runnumber, int runnumber_ped)
   c1->Print(out_pdf);
 
   
-  
-
-  
-
   TH1D *hist_bh2_adc_u[NumOfSegBH2];
   TH1D *hist_bh2_adc_d[NumOfSegBH2];
   TH1D *hist_bh2_tdc_s[NumOfSegBH2];
@@ -509,7 +505,7 @@ void analysis_e72(int runnumber, int runnumber_ped)
   tree_beam->Branch("p",&p_beam,"p/D");
   tree_beam->Branch("seg_bh2",&seg_bh2,"seg_bh2/I");
 
-
+  
   
 			     
   //again bac cut
@@ -546,7 +542,7 @@ void analysis_e72(int runnumber, int runnumber_ped)
       }
     } //BH2 cut end
     
-      
+    
     
     //Pure one track cut
     if(ntrack != 1)continue;
@@ -618,7 +614,7 @@ void analysis_e72(int runnumber, int runnumber_ped)
   //c2->Divide(3,4);
   //c3->Divide(3,4);
   //c4->Divide(3,4);
-
+  
   TGraphErrors *g_bac_npe_mean = new TGraphErrors();
   double bac_x_mean[NumOfSegBH2];
   double bac_x_rms[NumOfSegBH2];

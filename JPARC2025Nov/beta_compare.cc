@@ -38,13 +38,13 @@ void beta_compare(){
   // 조건:
   // particle = pi, trig = beam, threshold = 30 인 run만 사용
   std::vector<RunInfo> runs = {
-    //{2489, 1000},
+    //{2596, 1000},
     {2585, 933},
     //{2502, 814},
     {2587, 755},
-    //{2569, 735},
+    {2580, 735},
     {2589, 715},
-    //{2509, 645},
+    //{2592, 645},
     {2512, 400}
   };
 
@@ -79,6 +79,7 @@ void beta_compare(){
     }
 
     TH1* h = dynamic_cast<TH1*>(fin->Get("hist_bac_npe_s_bh2_pass7"));
+    //TH1* h = dynamic_cast<TH1*>(fin->Get("hist_bac_npe_s7"));
     if (!h) {
       std::cerr << "Histogram hist_bac_npe_s_pass not found in " << fname << std::endl;
       fin->Close();
@@ -125,6 +126,15 @@ void beta_compare(){
       fitMin = 0;
       fitMax = 500;
     }
+    else if(r.run ==2596){
+      fitMin = 200;
+      fitMax = 700;
+    }
+    else if(r.run ==2592){
+      fitMin = 300;
+      fitMax = 700;
+    }
+    
     
     TF1 * fgaus;
     fgaus = new TF1(Form("fgaus_%d", r.run), "gaus", fitMin, fitMax);
@@ -207,6 +217,56 @@ void beta_compare(){
   gr->GetXaxis()->SetLimits(1.00,1.30);
   gr->GetYaxis()->SetRangeUser(0, 40);
   gr->Draw("AP");
+  TBox *box = new TBox(1.029, 0, 1.047, 40);
+  box->SetFillColorAlpha(kRed, 0.15); 
+  box->SetLineColor(0);               
+
+  box->Draw("same");
+  gr->Draw("P same");
+
+
+  TPad *pad = new TPad("pad","pad",0.5,0.5,0.9,0.9);
+  pad->SetFillStyle(4000); // transparent
+  pad->SetFrameFillStyle(0);
+  pad->SetLeftMargin(0.12);
+  pad->SetRightMargin(0.04);
+  pad->SetBottomMargin(0.25);
+  pad->SetTopMargin(0.04);
+  pad->Draw();
+  pad->cd();
+  TGraphErrors *gr_zoom =
+    (TGraphErrors*)gr->Clone("gr_zoom");
+  gr_zoom->Draw("AP");
+  gr_zoom->GetXaxis()->SetLimits(1.03, 1.047);
+  gr_zoom->GetYaxis()->SetRangeUser(33, 38);
+
+  TF1 *fit_zoom =
+    (TF1*)flin->Clone("fit_zoom");
+
+  
+
+  gr_zoom->GetXaxis()->SetNdivisions(505); // major 5개 정도
+  gr_zoom->GetYaxis()->SetNdivisions(505); // major 5개 정도
+  gr_zoom->GetXaxis()->SetTickLength(0.06);
+  gr_zoom->GetYaxis()->SetTickLength(0.06);
+  gr_zoom->GetXaxis()->SetLabelSize(0.08);
+  gr_zoom->GetYaxis()->SetLabelSize(0.08);
+  gr_zoom->GetXaxis()->SetTitleSize(0.08);
+  gr_zoom->GetYaxis()->SetTitleSize(0.08);
+  gr_zoom->GetXaxis()->SetTitleOffset(0.9);
+  gr_zoom->GetXaxis()->SetLabelOffset(0.02);
+  gr_zoom->GetYaxis()->SetTitleOffset(0.75);
+
+  fit_zoom->SetRange(1.030, 1.047);
+  fit_zoom->Draw("same");
+  gr_zoom->Draw("P same");
+
+  gPad->Modified();
+  gPad->Update();
+
+  c1->cd();
+
+ 
   c1->Print(out_pdf+")");
   c1->SaveAs("beta_npe.pdf");
 
