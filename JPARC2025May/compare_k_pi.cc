@@ -96,7 +96,18 @@ void compare_k_pi()
   leg->Draw();
 
   c1->SaveAs("normalized_bac_npe_pion_kaon.pdf");
-  c1->SaveAs("normalized_bac_npe_pion_kaon.png");
+
+  int threshold_bin = h_kaon->FindBin(15.0);
+  double total =
+    h_kaon->Integral();
+  double misid =
+    h_kaon->Integral(threshold_bin,
+                     h_kaon->GetNbinsX());
+  double misid_percent =
+    misid / total * 100.0;
+  std::cout << "Kaon mis-identification : "
+	    << misid_percent
+	    << " %" << std::endl;
 
   f_pass->Close();
   f_kaon->Close();
