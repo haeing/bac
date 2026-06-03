@@ -419,8 +419,10 @@ def plot_area_averaged_contour_map_smooth(
             label_fontsize=20
         )
 
-    ax.set_xlabel("X [mm]",fontsize=16)
-    ax.set_ylabel("Y [mm]",fontsize=16)
+    ax.set_xlabel("X [mm]",fontsize=20)
+    ax.set_ylabel("Y [mm]",fontsize=20)
+    ax.xaxis.set_label_coords(0.92, -0.06)
+    ax.yaxis.set_label_coords(-0.08, 0.92)
     ax.set_xticks([-40, -20, 0, 20, 40])
     ax.set_yticks([-40, -20, 0, 20, 40])
     ax.set_xlim(-57.5, 57.5)
@@ -431,7 +433,7 @@ def plot_area_averaged_contour_map_smooth(
 
     cbar = fig.colorbar(cf, ax=ax)
     cbar.set_ticks(np.arange(0, 51, 10))
-    cbar.set_label("Np.e.",fontsize=18)
+    cbar.set_label("Np.e.",fontsize=20)
     cbar.ax.tick_params(labelsize=14)
 
     fig.tight_layout()

@@ -196,8 +196,8 @@ def plot_trigger_footprint_map(m, th, thre_target, outname,
                 ax.text(x0, y0, f"{val:.2f}", ha="center", va="center",
                         fontsize=9, color="black")
 
-    ax.set_xlabel("X (mm)")
-    ax.set_ylabel("Y (mm)")
+    ax.set_xlabel("X (mm)", fontsize=20)
+    ax.set_ylabel("Y (mm)", fontsize=20)
     ax.set_title(f"Data Np.e. footprint map (HV={HV_TARGET}, thick={th}, thre={thre_target})\n"
                  f"Trigger area = {TRIG_WX:.0f}×{TRIG_WY:.0f} mm$^2$, Aerogel = {AERO_SIZE:.0f}×{AERO_SIZE:.0f} mm$^2$")
 
@@ -215,7 +215,7 @@ def plot_trigger_footprint_map(m, th, thre_target, outname,
     sm = cm.ScalarMappable(norm=norm, cmap=cmap)
     sm.set_array([])
     cbar = fig.colorbar(sm, ax=ax)
-    cbar.set_label("Np.e.")
+    cbar.set_label("Np.e.", fontsize=20)
 
     fig.tight_layout()
     fig.savefig(outname, dpi=200)

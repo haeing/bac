@@ -85,7 +85,7 @@ void n_index_mom()
   latex.SetTextSize(0.05);
   latex.SetTextColor(kRed);
   latex.SetTextFont(132);
-  latex.DrawLatex(742, 1.305, "735 MeV/c");
+  latex.DrawLatex(742, 1.305, "735 MeV/#it{c}");
 
   // Legend
   TLegend* leg = new TLegend(0.63, 0.78, 0.90, 0.92);
