@@ -8,7 +8,7 @@
 #include <vector>
 #include <cmath>
 
-bool kaon = false;
+bool kaon = true;
 
 int npe_threshold = -15;
 const double T0_z = -1100.0;
@@ -974,6 +974,7 @@ void analysis_t110(int runnumber, int runnumber_ped)
   gr->Write("g_thr");
   g_eff->Write("g_eff");
   hist_btof->Write();
+  hist_bac_npe_s_kaon->Write();
   hist_bac_npe_s_pass->Write();
   f_graph->Close();
   

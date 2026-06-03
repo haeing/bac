@@ -72,7 +72,7 @@ void compare_k_pi()
   h_pass_n->GetXaxis()->SetRangeUser(-10, 90);
 
   double ymax = std::max(h_pass_n->GetMaximum(), h_kaon_n->GetMaximum());
-  h_pass_n->SetMaximum(ymax * 1.25);
+  h_pass_n->SetMaximum(0.1);
   h_pass_n->SetMinimum(0);
   h_pass_n->GetXaxis()->SetRangeUser(0,90);
 
@@ -81,6 +81,12 @@ void compare_k_pi()
 
   h_pass_n->Draw("hist");
   h_kaon_n->Draw("hist same");
+
+  TLine* line_n = new TLine(15, 0, 15, 0.1);
+  line_n->SetLineColor(kBlue);
+  //line_n->SetLineStyle(2);
+  line_n->SetLineWidth(3);
+  line_n->Draw("SAME");
 
   TLegend* leg = new TLegend(0.58, 0.70, 0.88, 0.88);
   leg->SetBorderSize(0);
