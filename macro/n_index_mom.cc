@@ -2,13 +2,12 @@ void n_index_mom()
 {
   
   const double n_aero = 1.115;
-  const double pmin = 250.0;
-  const double pmax = 1500.0;
-  //const double sep_p1 = 625.0;
-  //const double sep_p2 = 970.0;
+  const double pmin = 530.0;
+  const double pmax = 1030.0;
+  const double pcenter = 735.0;
 
-  const double sep_p1 = 700.0;
-  const double sep_p2 = 800.0;
+  const double sep_p1 = 645.0;
+  const double sep_p2 = 825.0;
 
   const double m_pi = 139.57039;
   const double m_K  = 493.677;
@@ -29,7 +28,7 @@ void n_index_mom()
 
   TCanvas* c = new TCanvas("c", "pi K threshold", 850, 520);
   c->SetMargin(0.12, 0.05, 0.12, 0.05);
-  c->SetGrid(1, 1);
+  //c->SetGrid(1, 1);
 
   TH1D* frame = new TH1D("frame", "", 100, pmin, pmax);
   frame->SetMinimum(1.0);
@@ -54,6 +53,8 @@ void n_index_mom()
   line_n->SetLineWidth(3);
   line_n->Draw("SAME");
 
+  
+
   // Red separation region
   double rect_height = 0.01;
   TBox* box = new TBox(sep_p1, n_aero - rect_height/2.0,
@@ -72,6 +73,19 @@ void n_index_mom()
   v2->SetLineStyle(9);
   v2->SetLineWidth(2);
   v2->Draw("SAME");
+
+  //Main mom line
+  TLine* v3 = new TLine(pcenter, 1.0, pcenter, 1.35);
+  //v2->SetLineStyle(9);
+  v3->SetLineWidth(4);
+  v3->SetLineColor(kRed);
+  v3->Draw("SAME");
+
+  TLatex latex;
+  latex.SetTextSize(0.05);
+  latex.SetTextColor(kRed);
+  latex.SetTextFont(132);
+  latex.DrawLatex(742, 1.305, "735 MeV/c");
 
   // Legend
   TLegend* leg = new TLegend(0.63, 0.78, 0.90, 0.92);

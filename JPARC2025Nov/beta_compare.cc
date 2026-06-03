@@ -33,7 +33,7 @@ double CalcBeta(double p_mev, double mass_mev = 139.57039) {
 void beta_compare(){
   gStyle->SetOptStat(0);
   //gStyle->SetOptFit(1111);
-  gStyle->SetOptFit(0);
+  //gStyle->SetOptFit(0);
 
   // 조건:
   // particle = pi, trig = beam, threshold = 30 인 run만 사용
@@ -196,13 +196,16 @@ void beta_compare(){
   TF1* flin = new TF1("flin", "[0] + [1]*x",
                       *std::min_element(x.begin(), x.end()) - 0.02,
                       *std::max_element(x.begin(), x.end()) + 0.02);
-  gr->Fit(flin, "R","",1.00,1.15);
+  //gr->Fit(flin, "R","",1.00,1.15);
+  gr->Fit(flin, "R","",1.00,1.30);
   //gr->Draw("AP");
   
   //c1->SaveAs("npe_mean_vs_invbeta2.pdf");
   //c1->SaveAs("npe_mean_vs_invbeta2.png");
 
   c1->Clear();
+  gr->GetXaxis()->SetLimits(1.00,1.30);
+  gr->GetYaxis()->SetRangeUser(0, 40);
   gr->Draw("AP");
   c1->Print(out_pdf+")");
   c1->SaveAs("beta_npe.pdf");
