@@ -40,9 +40,9 @@
 //////////////////////////////////////////////////////////////
 
 // histogram binning
-const int    NBin_TOF = 500;
-const double TOF_Min  = -5.0;
-const double TOF_Max  = 30.0;
+const int    NBin_TOF = 300;
+const double TOF_Min  = -2.0;
+const double TOF_Max  = 10.0;
 
 // detector distance
 const double Ldet = 8000.0; // mm
@@ -753,15 +753,16 @@ void kaon_decay_tof(
 
     c1->SetLogy();
 
+    hPi->GetYaxis()->SetRangeUser(1,1000000);
     hPi->Draw("hist");
     hK->Draw("hist same");
 
     hMuNu->Draw("hist same");
     hPiPi0->Draw("hist same");
     hPiPiPi->Draw("hist same");
-    hPiPi0Pi0->Draw("hist same");
-    hPi0ENu->Draw("hist same");
-    hPi0MuNu->Draw("hist same");
+    //hPiPi0Pi0->Draw("hist same");
+    //hPi0ENu->Draw("hist same");
+    //hPi0MuNu->Draw("hist same");
 
     hBACAll->Draw("hist same");
 
@@ -776,20 +777,20 @@ void kaon_decay_tof(
         );
 
     leg->AddEntry(hPi,
-        "Beam #pi", "l");
+        "#pi", "l");
 
     leg->AddEntry(hK,
-        "Pure K after 8 m", "l");
+        "#it{K} surviving at BH2", "l");
 
     leg->AddEntry(hMuNu,
-        "K #rightarrow #mu#nu", "l");
+        "#it{K #rightarrow #mu#nu}", "l");
 
     leg->AddEntry(hPiPi0,
-        "K #rightarrow #pi#pi^{0}", "l");
+        "#it{K #rightarrow #pi#pi^{0}}", "l");
 
     leg->AddEntry(hPiPiPi,
-        "K #rightarrow #pi#pi#pi", "l");
-
+		  "#it{K #rightarrow #pi#pi#pi}", "l");
+    /*
     leg->AddEntry(hPiPi0Pi0,
         "K #rightarrow #pi#pi^{0}#pi^{0}", "l");
 
@@ -798,9 +799,9 @@ void kaon_decay_tof(
 
     leg->AddEntry(hPi0MuNu,
         "K #rightarrow #pi^{0}#mu#nu", "l");
-
+    */
     leg->AddEntry(hBACAll,
-        "All decay daughters with BAC light",
+		  "Decay dauthers above BAC Cherenkov threshold",
         "l");
 
     leg->Draw();
@@ -830,4 +831,26 @@ void kaon_decay_tof(
     std::cout << "Remaining others : "
               << nOther
               << std::endl;
+
+    
+    double TOFCut = 4.0;
+    int binCut =
+      hPi->FindBin(TOFCut);
+
+    double N_BAC_TOF =
+      hBACAll->Integral(binCut, NBin_TOF);
+
+    double N_TOF =
+      hK->Integral(binCut, NBin_TOF)
+      + hMuNu->Integral(binCut, NBin_TOF)
+      + hPiPi0->Integral(binCut, NBin_TOF)
+      + hPiPiPi->Integral(binCut, NBin_TOF)
+      + hPiPi0Pi0->Integral(binCut, NBin_TOF)
+      + hPi0ENu->Integral(binCut, NBin_TOF)
+      + hPi0MuNu->Integral(binCut, NBin_TOF);
+    double frac =
+    100.0 * N_BAC_TOF / N_TOF;
+    
+    cout<<"fraction : "<<frac<<endl;
+ 
 }
