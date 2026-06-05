@@ -822,6 +822,7 @@ void analysis_t110(int runnumber, int runnumber_ped)
     if(ntrack != 1)continue;
 
     if(seg_bh2 == -9999)continue;
+
     
     for(int i=0;i<NumOfSegBH2;i++){
       if(bh2_pass[i] && bac_pass[i]){
@@ -845,7 +846,7 @@ void analysis_t110(int runnumber, int runnumber_ped)
 	  bac_npe+=((*bac_adc_u)[j]-bac_ped_mean[j])/bac_gain[j]*(1-bac_pxt[j]);
 	}
 	hist_bac_npe_s_bh2[i]->Fill(bac_npe);
-	hist_bac_npe_s_kaon->Fill(bac_npe);
+	hist_bac_npe_s_kaon[i]->Fill(bac_npe);
 	
 	//BAC npe cut offline
 	if(bac_npe <npe_threshold)continue;
