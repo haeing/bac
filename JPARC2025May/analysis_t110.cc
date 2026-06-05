@@ -353,6 +353,7 @@ void analysis_t110(int runnumber, int runnumber_ped)
   TH1D *hist_bac_npe_s = new TH1D("hist_bac_npe_s","hist_bac_npe_s",100,-10,90);
   TH1D *hist_bac_npe_s_pass = new TH1D("hist_bac_npe_s_pass","hist_bac_npe_s_pass",100,-10,90);
   TH1D *hist_bac_npe_s_kaon = new TH1D("hist_bac_npe_s_kaon","hist_bac_npe_s_kaon",100,-10,90);
+  TH2D *hist_bac_npe_btof_kaon = new TH2D("hist_bac_npe_btof_kaon","hist_bac_npe_btof_kaon",100,-10,90,100,-2,7);
   TH1D *hist_bac_npe_s_bh2[NumOfSegBH2];
   TH1D *hist_bac_npe_s_bh2_pass[NumOfSegBH2];
   TH1D *hist_bac_tdc_s = new TH1D("hist_bac_tdc_s","hist_bac_tdc_s",(bac_tdc_max - bac_tdc_min)/tdc_step,bac_tdc_min,bac_tdc_max);
@@ -847,6 +848,7 @@ void analysis_t110(int runnumber, int runnumber_ped)
 	}
 	hist_bac_npe_s_bh2[i]->Fill(bac_npe);
 	hist_bac_npe_s_kaon->Fill(bac_npe);
+	hist_bac_npe_btof_kaon->Fill(bac_npe,btof0);
 	
 	//BAC npe cut offline
 	if(bac_npe <npe_threshold)continue;
@@ -976,6 +978,7 @@ void analysis_t110(int runnumber, int runnumber_ped)
   g_eff->Write("g_eff");
   hist_btof->Write();
   hist_bac_npe_s_kaon->Write();
+  hist_bac_npe_btof_kaon->Write();
   hist_bac_npe_s_pass->Write();
   f_graph->Close();
   
