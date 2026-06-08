@@ -9,7 +9,7 @@ void btof(){
   double btof0;
   data->SetBranchAddress("btof0",&btof0);
 
-  TBox *box_pi = new TBox(-0.9,0,1,90000);
+  TBox *box_pi = new TBox(-0.9,0,1.3,90000);
   box_pi->SetFillColorAlpha(kBlue,0.12);
   box_pi->SetLineColor(0);
 
