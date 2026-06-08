@@ -407,6 +407,7 @@ void analysis_t110(int runnumber, int runnumber_ped)
     data->GetEntry(n);
     if(kaon){
       if(btof0 >-4)continue;
+      if(btof0 <-8)continue;
       for(int j=0;j<(*sac_tdc_u)[8].size();j++){
 	//if((*sac_tdc_u)[8][j]>684000 && (*sac_tdc_u)[8][j] <688000)continue;
       }
@@ -604,10 +605,13 @@ void analysis_t110(int runnumber, int runnumber_ped)
     bcout->GetEntry(n);
     if(kaon){
       if(btof0 >-4)continue;
+      if(btof0 <-8)continue;
+      /*
       for(int j=0;j<(*sac_tdc_u)[8].size();j++){
 	if((*sac_tdc_u)[8][j]>684000 && (*sac_tdc_u)[8][j] <688000)continue;
       }
-      if((*sac_adc_u)[8]>120)continue;
+      */
+      //if((*sac_adc_u)[8]>120)continue;
       
     }
     //T0 cut start
@@ -764,6 +768,7 @@ void analysis_t110(int runnumber, int runnumber_ped)
     bcout->GetEntry(n);
     if(kaon){
       if(btof0 >-4)continue;
+      if(btof0 <-8)continue;
       for(int j=0;j<(*sac_tdc_u)[8].size();j++){
 	//if((*sac_tdc_u)[8][j]>684000 && (*sac_tdc_u)[8][j] <688000)continue;
       }
@@ -847,8 +852,12 @@ void analysis_t110(int runnumber, int runnumber_ped)
 	  bac_npe+=((*bac_adc_u)[j]-bac_ped_mean[j])/bac_gain[j]*(1-bac_pxt[j]);
 	}
 	hist_bac_npe_s_bh2[i]->Fill(bac_npe);
-	hist_bac_npe_s_kaon->Fill(bac_npe);
-	hist_bac_npe_btof_kaon->Fill(bac_npe,btof0);
+
+	if(abs((*x0)[0]+BAC_z*(*u0)[0]) < 115./2. && abs((*y0)[0]+BAC_z*(*v0)[0])<115./2.){
+	  
+	  hist_bac_npe_s_kaon->Fill(bac_npe);
+	  hist_bac_npe_btof_kaon->Fill(bac_npe,btof0*-1);
+	}
 	
 	//BAC npe cut offline
 	if(bac_npe <npe_threshold)continue;
