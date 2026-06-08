@@ -342,7 +342,7 @@ def plot_simulation_contour_with_measurement_diff(
         color="black", linewidth=1.5
     )
 
-    add_measurement_boxes_with_diff(ax, m_data, m_data_err, xsim, ysim, zsim)
+    #add_measurement_boxes_with_diff(ax, m_data, m_data_err, xsim, ysim, zsim)
 
     ax.set_xlim(DET_XMIN, DET_XMAX)
     ax.set_ylim(DET_YMIN, DET_YMAX)

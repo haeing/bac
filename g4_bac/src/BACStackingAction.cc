@@ -10,6 +10,8 @@
 #include "G4Track.hh"
 #include "G4ios.hh"
 #include "G4ClassificationOfNewTrack.hh"
+#include "G4Electron.hh"
+#include "G4SystemOfUnits.hh"
 
 int gCerenkovCounter;
 int check;
@@ -38,15 +40,57 @@ BACStackingAction::ClassifyNewTrack(const G4Track * aTrack)
   const G4double h = 6.628e-34;
   const G4double c = 3.0e+8;
 
+  //delta
+  
+
+  if (aTrack->GetDefinition() == G4Electron::ElectronDefinition()) {
+
+    G4String procName = "Primary";
+
+    if (aTrack->GetCreatorProcess())
+
+      procName = aTrack->GetCreatorProcess()->GetProcessName();
+
+    if ((procName == "hIoni" || procName == "eIoni") &&
+
+        aTrack->GetKineticEnergy() > 0.66*MeV) {
+
+      G4cout << "[High-energy delta-ray] "
+
+	     << "TrackID=" << aTrack->GetTrackID()
+
+	     << " ParentID=" << aTrack->GetParentID()
+
+	     << " Creator=" << procName
+
+	     << " Ekin=" << aTrack->GetKineticEnergy()/MeV << " MeV"
+
+	     << G4endl;
+
+    }
+
+  }
 
   //for view
+  /*
   if (aTrack->GetDefinition() == G4OpticalPhoton::Definition()) {
 
      
         if (G4UniformRand() > 0.2) {
             return fKill;
         }
+	}
+  */
+  if (aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) {
+    if (aTrack->GetCreatorProcess() &&
+        aTrack->GetCreatorProcess()->GetProcessName() == "Cerenkov") {
+
+      G4cout << "[Cerenkov photon] "
+	     << "ParentID=" << aTrack->GetParentID()
+	     << " E=" << aTrack->GetTotalEnergy()/eV << " eV"
+	     << G4endl;
     }
+  }
 
   if(aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
     if(aTrack->GetTouchable()->GetVolume()->GetCopyNo() ==123){

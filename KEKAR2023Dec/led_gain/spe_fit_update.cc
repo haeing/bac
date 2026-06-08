@@ -274,6 +274,7 @@ static bool EstimateQ1(TH1* hOn, double &Q1_init, double &m0_init){
 TF1* FitSPE(TH1* hOn, TH1* hOff, TDirectory* outDir, const char* key){
   double m0=0, s0=0;
   double At=0, tau=0, x0=0, w=0;
+
   
   if(!FitPedestalSmooth(hOff, m0, s0, At, tau, x0, w)){
     std::cerr << "Pedestal smooth fit failed.\n";

@@ -352,8 +352,8 @@ def plot_area_averaged_contour_map_smooth(
     m, th, thre_target, outname,
     beam_fit=None,
     pixel_mm=1.0,
-    sigma_x=7.0,
-    sigma_y=9.0,
+    sigma_x=9.0,
+    sigma_y=13.0,
     nlevels=14,
 ):
     m = np.asarray(m, dtype=float)
@@ -410,14 +410,15 @@ def plot_area_averaged_contour_map_smooth(
             )
 
     # beam sigma ellipses
-    if beam_fit is not None:
-        add_beam_sigma_ellipses(
-            ax, beam_fit,
-            sigma_levels=BEAM_SIGMA_LEVELS,
-            edgecolor="red",
-            linewidth=1.8,
-            label_fontsize=20
-        )
+    
+    # if beam_fit is not None:
+    #     add_beam_sigma_ellipses(
+    #         ax, beam_fit,
+    #         sigma_levels=BEAM_SIGMA_LEVELS,
+    #         edgecolor="red",
+    #         linewidth=1.8,
+    #         label_fontsize=20
+    #     )
 
     ax.set_xlabel("X [mm]",fontsize=20)
     ax.set_ylabel("Y [mm]",fontsize=20)

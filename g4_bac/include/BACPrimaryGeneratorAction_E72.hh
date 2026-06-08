@@ -37,7 +37,7 @@ private:
   Int_t bp_nAccess=0;
   const double mass_kaonm = 0.493677;
   const double mass_pim = 0.139570;
-  G4String particle = "pion";
+  G4String particle = "kaon";
   G4double energy;
 
   //G4String parameter1;
