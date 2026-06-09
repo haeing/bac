@@ -314,6 +314,7 @@ void analysis_e72(int runnumber, int runnumber_ped)
 
   for(int n=0;n<data->GetEntries();n++){
     data->GetEntry(n);
+    
     if(kaon){
       if(btof0 >-3)continue;
     }
@@ -413,6 +414,7 @@ void analysis_e72(int runnumber, int runnumber_ped)
   int eff_pass[NumOfSegBH2] = {0};
   for(int n=0;n<data->GetEntries();n++){
     if(n%10000 == 0)cout<<"Entry "<<n<<std::endl;
+    cout<<n<<endl;
     data->GetEntry(n);
     bcout->GetEntry(n);
     if(kaon){

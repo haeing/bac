@@ -1,27 +1,3 @@
-// kaon_pion_tof_full_decay.C
-//
-// root -l 'kaon_pion_tof_full_decay.C("E72_735.csv")'
-//
-// Full beam composition simulation:
-//  - Beam pion
-//  - Surviving kaon
-//  - K->munu
-//  - K->pipi0
-//  - K->pipipi
-//  - K->pipi0pi0
-//  - K->pi0enu
-//  - K->pi0munu
-//
-// Includes:
-//  - momentum spread from CSV
-//  - kaon decay probability using c*tau
-//  - TGenPhaseSpace decay
-//  - detector geometry acceptance
-//  - BAC Cherenkov threshold selection
-//
-// No png/root saving.
-//
-
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -48,8 +24,13 @@ const double TOF_Max  = 10.0;
 const double Ldet = 8000.0; // mm
 
 // rear detector size
+
 const double rearX = 115.0; // mm
 const double rearY = 100.0; // mm
+/*
+const double rearX = 1000.0; // mm
+const double rearY = 1000.0; // mm
+*/
 
 // beam profile sigma
 const double beamSigmaX = 20.0; // mm
@@ -74,7 +55,7 @@ const double mmu  = 105.65837;
 const double me   = 0.51099895;
 const double mnu  = 0.0;
 
-// K± cτ
+// K± ctau
 const double cTauK = 3712.0; // mm
 
 // branching ratios
@@ -298,19 +279,19 @@ int PropagateDecayProducts(
         massArray[i] = masses[i];
 
     TGenPhaseSpace decay;
-
+    
     decay.SetDecay(
-        kaon,
-        nD,
-        massArray
-    );
+		   kaon,
+		   nD,
+		   massArray
+		   );
+    
 
     decay.Generate();
 
     //////////////////////////////////////////////////////////
 
-    double tofRef =
-        TOF(Ldet, 735.0, mpi);
+    double tofRef = TOF(Ldet, 735.0, mpi);
 
     int nAccepted = 0;
 
@@ -344,12 +325,14 @@ int PropagateDecayProducts(
         double yRear =
             y0 + py * scale;
 
+	
         if (!InRect(
                 xRear,
                 yRear,
                 rearX,
                 rearY))
             continue;
+	
 
         //////////////////////////////////////////////////////
 
@@ -833,21 +816,23 @@ void kaon_decay_tof(
               << std::endl;
 
     
-    double TOFCut = 4.0;
-    int binCut =
-      hPi->FindBin(TOFCut);
+    double TOFCut_min = 4.0;
+    double TOFCut_max = 5.6;
+    int binCut_min =
+      hPi->FindBin(TOFCut_min);
+    int binCut_max = hPi->FindBin(TOFCut_max);
 
     double N_BAC_TOF =
-      hBACAll->Integral(binCut, NBin_TOF);
+      hBACAll->Integral(binCut_min, binCut_max);
 
     double N_TOF =
-      hK->Integral(binCut, NBin_TOF)
-      + hMuNu->Integral(binCut, NBin_TOF)
-      + hPiPi0->Integral(binCut, NBin_TOF)
-      + hPiPiPi->Integral(binCut, NBin_TOF)
-      + hPiPi0Pi0->Integral(binCut, NBin_TOF)
-      + hPi0ENu->Integral(binCut, NBin_TOF)
-      + hPi0MuNu->Integral(binCut, NBin_TOF);
+      hK->Integral(binCut_min, binCut_max)
+      + hMuNu->Integral(binCut_min, binCut_max)
+      + hPiPi0->Integral(binCut_min, binCut_max)
+      + hPiPiPi->Integral(binCut_min, binCut_max)
+      + hPiPi0Pi0->Integral(binCut_min, binCut_max)
+      + hPi0ENu->Integral(binCut_min, binCut_max)
+      + hPi0MuNu->Integral(binCut_min, binCut_max);
     double frac =
     100.0 * N_BAC_TOF / N_TOF;
     
