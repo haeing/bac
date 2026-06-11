@@ -16,7 +16,7 @@
 #include "TMath.h"
 
 
-const double npe_factor = 37.5266 / 424.576;
+const double npe_factor = 37.7331 / 424.576;
 const double p_ref = 906.70;
 const double sig_p_ref = 11.03;
 double m_pi = 139.57039; 
