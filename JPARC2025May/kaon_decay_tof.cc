@@ -101,7 +101,8 @@ double TOF(double path_mm, double p, double m)
 
 bool PassAerogel(double p, double m)
 {
-    return Beta(p,m) > 1.0 / nAerogel;
+  return Beta(p,m) > 1.0 / nAerogel;
+  //return Beta(p,m) > 0.95;
 }
 
 //////////////////////////////////////////////////////////////

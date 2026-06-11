@@ -16,7 +16,7 @@ void compare_k_pi()
 
   const char* file = "t110_graph_344_k_pi.root";
   const char* hist_name = "hist_bac_btof";
-
+  
   TFile* f = TFile::Open(file, "READ");
   if (!f || f->IsZombie()) {
     std::cout << "Cannot open file: " << file << std::endl;

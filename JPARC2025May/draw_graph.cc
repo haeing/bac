@@ -45,7 +45,7 @@ void draw_graph(){
   int pid = 0;
   for(int i=0;i<12;i++){
     c0->cd(i+1);
-    h_npe[i]->Fit(f_npe[i],"RQ","",30,50);
+    h_npe[i]->Fit(f_npe[i],"","",30,50);
     if(i>2 && i < 10){
       m_npe[pid] = f_npe[i]->GetParameter(1);
       em_npe[pid] = f_npe[i]->GetParError(1);
@@ -62,8 +62,10 @@ void draw_graph(){
   TCanvas *c1 = new TCanvas("c1","c1");
   
   g_simul_npe->SetMarkerStyle(21);
-  g_bac_npe_mean->SetMarkerColor(kRed);
+  //g_bac_npe_mean->SetMarkerColor(kRed);
   //g_simul_npe->SetMarkerSize(2);
+  int n = g_bac_npe_mean->GetN();
+  g_bac_npe_mean->Set(n-1);
   TLegend* leg = new TLegend(0.45, 0.55, 0.88, 0.82);
   leg->SetBorderSize(1);
   leg->SetFillStyle(0);
@@ -73,17 +75,18 @@ void draw_graph(){
  
   auto mg = new TMultiGraph();
   mg->Add(g_bac_npe_mean);
-  mg->Add(g_simul_npe);
+  //mg->Add(g_simul_npe);
   mg->GetYaxis()->SetRangeUser(10,50);
   mg->GetXaxis()->SetTitle("X [mm]");
   mg->GetYaxis()->SetTitle("Np.e.");
 			   
   mg->Draw("AP");
-  leg->Draw("same");
+  //leg->Draw("same");
   
   TCanvas *c2 = new TCanvas("c2","c2");
   g_eff->GetXaxis()->SetTitle("X [mm]");
   g_eff->GetYaxis()->SetTitle("Pion Efficiency");
+  g_eff->Set(n-1);
   g_eff->Draw("AP");
   
   
