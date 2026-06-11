@@ -40,7 +40,10 @@ const double bh2_y = 100.;
 
 const double bac_tdc_min = 700000.;
 const double bac_tdc_max = 720000.;
-
+/*
+const double bac_tdc_min = 735000.;
+const double bac_tdc_max = 800000.;
+*/
 const double tdc_step = 100.;
 
 struct WStat {
@@ -129,6 +132,7 @@ void analysis_e72(int runnumber, int runnumber_ped)
 {
   double run_mom;
   double bac_tdc_cut[2]={700000.,720000.};
+  //double bac_tdc_cut[2]={740000.,770000.};
   int n_beam = 0;
   
   if(runnumber <2100){
