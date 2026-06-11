@@ -50,7 +50,8 @@ ycenters = 0.5 * (yedges[:-1] + yedges[1:])
 values_masked = np.ma.masked_where(values_total.T <= 0, values_total.T)
 
 # ROOT-like palette
-cmap = plt.get_cmap("turbo").copy()
+#cmap = plt.get_cmap("turbo").copy()
+cmap = plt.get_cmap("viridis").copy()
 cmap.set_bad("white")
 
 # =========================================

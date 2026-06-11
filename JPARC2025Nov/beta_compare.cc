@@ -124,8 +124,8 @@ void beta_compare(){
       fitMax = 600;
     }
     else if(r.run ==2512){
-      fitMin = 0;
-      fitMax = 500;
+      fitMin = 100;
+      fitMax = 350;
     }
     else if(r.run ==2596){
       fitMin = 200;
@@ -196,7 +196,8 @@ void beta_compare(){
   gr->SetTitle(";1/#beta^{2};Np.e.");
   gr->GetXaxis()->SetLimits(1.01, 1.15);
   gr->SetMarkerStyle(20);
-  gr->SetMarkerSize(1.2);
+  gr->SetMarkerColor(kBlue);
+  gr->SetMarkerSize(1);
   gr->SetLineWidth(2);
 
   
@@ -216,7 +217,7 @@ void beta_compare(){
 
   c1->Clear();
   gr->GetXaxis()->SetLimits(1.00,1.30);
-  gr->GetYaxis()->SetRangeUser(0, 40);
+  gr->GetYaxis()->SetRangeUser(0, 42);
   gr->Draw("AP");
   TBox *box = new TBox(1.029, 0, 1.047, 40);
   box->SetFillColorAlpha(kRed, 0.15); 
@@ -239,7 +240,7 @@ void beta_compare(){
     (TGraphErrors*)gr->Clone("gr_zoom");
   gr_zoom->Draw("AP");
   gr_zoom->GetXaxis()->SetLimits(1.03, 1.047);
-  gr_zoom->GetYaxis()->SetRangeUser(33, 38);
+  gr_zoom->GetYaxis()->SetRangeUser(35, 40);
 
   TF1 *fit_zoom =
     (TF1*)flin->Clone("fit_zoom");
