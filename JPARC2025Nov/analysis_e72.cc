@@ -11,9 +11,12 @@
 
 bool kaon = false;
 bool pion = true;
-
+/*
 const double pion_min = -3.;
 const double pion_max = 2.;
+*/
+const double pion_min = -4.;
+const double pion_max = 0.;
 
 const double kaon_min = 4.5;
 const double kaon_max = 5.6;
@@ -31,9 +34,12 @@ const int NumOfSegBAC = 4;
 
 const double t0_tdc_min = 692000.;
 const double t0_tdc_max = 697000.;
-
+/*
 const double bh2_tdc_min = 705000.;
 const double bh2_tdc_max = 720000.;
+*/
+const double bh2_tdc_min = 720000.;
+const double bh2_tdc_max = 730000.;
 
 const double bh2_x = 14.;
 const double bh2_y = 100.;
@@ -211,6 +217,8 @@ void analysis_e72(int runnumber, int runnumber_ped)
   vector<double> *bh2_adc_d = nullptr;
 
   vector<vector<double>>* bh2_tdc_s = nullptr;
+  vector<vector<double>>* bh2_tdc_u = nullptr;
+  vector<vector<double>>* bh2_tdc_d = nullptr;
   
   
   vector<double>* bac_adc_u = nullptr;
@@ -222,6 +230,9 @@ void analysis_e72(int runnumber, int runnumber_ped)
   data->SetBranchAddress("bh2_adc_u",&bh2_adc_u);
   data->SetBranchAddress("bh2_adc_d",&bh2_adc_d);
   data->SetBranchAddress("bh2_tdc_s",&bh2_tdc_s);
+  data->SetBranchAddress("bh2_tdc_u",&bh2_tdc_u);
+  data->SetBranchAddress("bh2_tdc_d",&bh2_tdc_d);
+  
 
   data->SetBranchAddress("bac_adc_u",&bac_adc_u);
   data->SetBranchAddress("bac_tdc_u",&bac_tdc_u);
@@ -347,7 +358,8 @@ void analysis_e72(int runnumber, int runnumber_ped)
     if (x0->empty() ||y0->empty() ||u0->empty() ||v0->empty()) continue;
     if (!bh2_adc_u || bh2_adc_u->empty() ||
 	!bh2_adc_d || bh2_adc_d->empty() ||
-	!bh2_tdc_s || bh2_tdc_s->empty() ||
+	!bh2_tdc_u || bh2_tdc_u->empty() ||
+	!bh2_tdc_d || bh2_tdc_d->empty() ||
 	!bac_adc_u || bac_adc_u->empty() ||
 	!bac_tdc_u || bac_tdc_u->empty()) {
       continue;
@@ -355,8 +367,7 @@ void analysis_e72(int runnumber, int runnumber_ped)
     if (bac_tdc_u->size() < NumOfSegBAC||
 	bac_tdc_u->size() <= 4||
 	bh2_adc_u->size() < NumOfSegBH2||
-	bh2_adc_d->size() < NumOfSegBH2||
-	bh2_tdc_s->size() < NumOfSegBH2)continue;
+	bh2_adc_d->size() < NumOfSegBH2)continue;
     
     
     if(n%10000 == 0)cout<<"Entry "<<n<<std::endl;
@@ -364,8 +375,8 @@ void analysis_e72(int runnumber, int runnumber_ped)
     for(int i=0;i<NumOfSegBH2;i++){
       hist_bh2_adc_u[i]->Fill((*bh2_adc_u)[i]);
       hist_bh2_adc_d[i]->Fill((*bh2_adc_d)[i]);
-      for(int j=0;j<(*bh2_tdc_s)[i].size();j++){
-	hist_bh2_tdc_s[i]->Fill((*bh2_tdc_s)[i][j]);
+      for(int j=0;j<(*bh2_tdc_u)[i].size();j++){
+	hist_bh2_tdc_s[i]->Fill((*bh2_tdc_u)[i][j]);
       }
     }
     for(int j=0;j<(*bac_tdc_u)[4].size();j++)hist_bac_tdc_s->Fill((*bac_tdc_u)[4][j]);
@@ -452,6 +463,7 @@ void analysis_e72(int runnumber, int runnumber_ped)
   bool bac_pass[NumOfSegBAC] = {false};
   int eff_total[NumOfSegBH2] = {0};
   int eff_pass[NumOfSegBH2] = {0};
+  
   for(int n=0;n<data->GetEntries();n++){
     if(n%10000 == 0)cout<<"Entry "<<n<<std::endl;
 
@@ -477,7 +489,8 @@ void analysis_e72(int runnumber, int runnumber_ped)
     if (x0->empty() ||y0->empty() ||u0->empty() ||v0->empty()) continue;
     if (!bh2_adc_u || bh2_adc_u->empty() ||
 	!bh2_adc_d || bh2_adc_d->empty() ||
-	!bh2_tdc_s || bh2_tdc_s->empty() ||
+	!bh2_tdc_u || bh2_tdc_u->empty() ||
+	!bh2_tdc_d || bh2_tdc_d->empty() ||
 	!bac_adc_u || bac_adc_u->empty() ||
 	!bac_tdc_u || bac_tdc_u->empty()) {
       continue;
@@ -485,15 +498,15 @@ void analysis_e72(int runnumber, int runnumber_ped)
     if (bac_tdc_u->size() < NumOfSegBAC||
 	bac_tdc_u->size() <= 4||
 	bh2_adc_u->size() < NumOfSegBH2||
-	bh2_adc_d->size() < NumOfSegBH2||
-	bh2_tdc_s->size() < NumOfSegBH2)continue;
+	bh2_adc_d->size() < NumOfSegBH2)continue;
+
 
     //BH2 cut start w/ BcOut
     for(int i=0;i<NumOfSegBH2;i++){
       bh2_pass[i] = false;
       if((*bh2_adc_u)[i]>bh2_adc_cut[0][i] && (*bh2_adc_d)[i]>bh2_adc_cut[1][i]){
-	for(int j=0;j<(*bh2_tdc_s).size();j++){
-	  if((*bh2_tdc_s)[i][j]>bh2_tdc_cut[i][0] && (*bh2_tdc_s)[i][j]<bh2_tdc_cut[i][1]){
+	for(int j=0;j<(*bh2_tdc_u)[i].size();j++){
+	  if((*bh2_tdc_u)[i][j]>bh2_tdc_cut[i][0] && (*bh2_tdc_u)[i][j]<bh2_tdc_cut[i][1]){
 	    double bh2_seg_x_min = -1*NumOfSegBH2*bh2_x/2.+i*bh2_x;
 	    double bh2_seg_x_max = -1*NumOfSegBH2*bh2_x/2.+(i+1)*bh2_x;
 	    if(ntrack>0){
@@ -603,7 +616,8 @@ void analysis_e72(int runnumber, int runnumber_ped)
     if (x0->empty() ||y0->empty() ||u0->empty() ||v0->empty()) continue;
     if (!bh2_adc_u || bh2_adc_u->empty() ||
 	!bh2_adc_d || bh2_adc_d->empty() ||
-	!bh2_tdc_s || bh2_tdc_s->empty() ||
+	!bh2_tdc_u || bh2_tdc_u->empty() ||
+	!bh2_tdc_d || bh2_tdc_d->empty() ||
 	!bac_adc_u || bac_adc_u->empty() ||
 	!bac_tdc_u || bac_tdc_u->empty()) {
       continue;
@@ -611,8 +625,8 @@ void analysis_e72(int runnumber, int runnumber_ped)
     if (bac_tdc_u->size() < NumOfSegBAC||
 	bac_tdc_u->size() <= 4||
 	bh2_adc_u->size() < NumOfSegBH2||
-	bh2_adc_d->size() < NumOfSegBH2||
-	bh2_tdc_s->size() < NumOfSegBH2)continue;
+	bh2_adc_d->size() < NumOfSegBH2)continue;
+
         
 
     
@@ -622,8 +636,8 @@ void analysis_e72(int runnumber, int runnumber_ped)
       bh2_pass[i] = false;
       bac_pass[i] = false;
       if((*bh2_adc_u)[i]>bh2_adc_cut[0][i] && (*bh2_adc_d)[i]>bh2_adc_cut[1][i]){
-	for(int j=0;j<(*bh2_tdc_s).size();j++){
-	  if((*bh2_tdc_s)[i][j]>bh2_tdc_cut[i][0] && (*bh2_tdc_s)[i][j]<bh2_tdc_cut[i][1]){
+	for(int j=0;j<(*bh2_tdc_u)[i].size();j++){
+	  if((*bh2_tdc_u)[i][j]>bh2_tdc_cut[i][0] && (*bh2_tdc_u)[i][j]<bh2_tdc_cut[i][1]){
 	    double bh2_seg_x_min = -1*NumOfSegBH2*bh2_x/2.+i*bh2_x;
 	    double bh2_seg_x_max = -1*NumOfSegBH2*bh2_x/2.+(i+1)*bh2_x;
 	    if((*x0)[0]+BH2_z*(*u0)[0] > bh2_seg_x_min && (*x0)[0]+BH2_z*(*u0)[0] < bh2_seg_x_max){
@@ -646,7 +660,8 @@ void analysis_e72(int runnumber, int runnumber_ped)
     if(ntrack != 1)continue;
     
     for(int i=0;i<NumOfSegBH2;i++){
-      if(bh2_pass[i] && bac_pass[i]){
+      //if(bh2_pass[i] && bac_pass[i]){
+      if(bh2_pass[i]){
 	//Make beam file start
 	z_beam = -50.; //mm
 	double bcout_z = BAC_z-50;
@@ -668,6 +683,7 @@ void analysis_e72(int runnumber, int runnumber_ped)
 	if(n_beam >= tree_beam_old->GetEntries())n_beam = 0;
 	//Make beam file end
 	eff_total[i]++;
+
 	hist_bac_npe_s_bh2[i]->Fill((*bac_adc_u)[4] - bac_ped_mean_s);
 	if(abs((*x0)[0]+BAC_z*(*u0)[0]) < 115./2. && abs((*y0)[0]+BAC_z*(*v0)[0])<115./2.){
 	  if(runnumber<2000){
@@ -796,7 +812,11 @@ void analysis_e72(int runnumber, int runnumber_ped)
   }
   hist_bac_npe_s_total->Write("hist_bac_npe_s_total");
   hist_bac_npe_s_pass->Write("hist_bac_npe_s_pass");
-  
+  g_eff->SetName("g_eff");
+  g_bac_npe_mean->SetName("g_bac_npe_mean");
+  g_bac_npe_mean->Write();
+  g_eff->Write();
+		 
   f_hist->Close();
 
 
