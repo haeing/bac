@@ -1,1 +1,1 @@
-../../../rootlogon_paper.C
+../rootlogon_paper.C
