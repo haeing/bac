@@ -8,7 +8,15 @@
 #include <vector>
 #include <cmath>
 
+
 bool kaon = false;
+bool pion = true;
+
+const double pion_min = -3.;
+const double pion_max = 2.;
+
+const double kaon_min = 4.5;
+const double kaon_max = 5.6;
 
 int npe_threshold = 5;
 const double T0_z = -1100.0;
@@ -283,6 +291,7 @@ void analysis_e72(int runnumber, int runnumber_ped)
   TH1D *hist_bac_npe_s_bh2[NumOfSegBH2];
   TH1D *hist_bac_npe_s_bh2_pass[NumOfSegBH2];
   TH1D *hist_bac_npe_s_pass = new TH1D("hist_bac_npe_s_pass","hist_bac_npe_s_pass",110,-100,1000);
+  
   TH1D *hist_bac_tdc_s = new TH1D("hist_bac_tdc_s","hist_bac_tdc_s",(bac_tdc_max - bac_tdc_min)/tdc_step,bac_tdc_min,bac_tdc_max);
 
   TF1 *f_bac_npe_s_bh2[NumOfSegBH2];
@@ -314,13 +323,38 @@ void analysis_e72(int runnumber, int runnumber_ped)
 
   for(int n=0;n<data->GetEntries();n++){
     data->GetEntry(n);
+    bcout->GetEntry(n);
+    double btof = -1*btof0;
+    if(kaon && !pion){
+      if(btof >kaon_max)continue;
+      if(btof <kaon_min)continue;
+    }
+    else if(pion && !kaon){
+      if(btof <pion_min)continue;
+      if(btof >pion_max)continue;
+    }
+    else if(pion && kaon){
+      if(btof<pion_min)continue;
+      if(btof>pion_max && btof<kaon_min)continue;
+      if(btof > kaon_max)continue;
+		      
+    }
+    if (!x0 || !y0 || !u0 || !v0) {continue;}
+    if (x0->empty() ||y0->empty() ||u0->empty() ||v0->empty()) continue;
+    if (!bh2_adc_u || bh2_adc_u->empty() ||
+	!bh2_adc_d || bh2_adc_d->empty() ||
+	!bh2_tdc_s || bh2_tdc_s->empty() ||
+	!bac_adc_u || bac_adc_u->empty() ||
+	!bac_tdc_u || bac_tdc_u->empty()) {
+      continue;
+    }
+    if (bac_tdc_u->size() < NumOfSegBAC||
+	bac_tdc_u->size() <= 4||
+	bh2_adc_u->size() < NumOfSegBH2||
+	bh2_adc_d->size() < NumOfSegBH2||
+	bh2_tdc_s->size() < NumOfSegBH2)continue;
     
-    if(kaon){
-      if(btof0 >-3)continue;
-    }
-    else if(!kaon){
-      if(btof0 <-3)continue;
-    }
+    
     if(n%10000 == 0)cout<<"Entry "<<n<<std::endl;
     
     for(int i=0;i<NumOfSegBH2;i++){
@@ -408,18 +442,47 @@ void analysis_e72(int runnumber, int runnumber_ped)
 
   //Efficiency, Npe check
   
+  
+  
   bool bh2_pass[NumOfSegBH2] = {false};
   bool bac_pass[NumOfSegBAC] = {false};
   int eff_total[NumOfSegBH2] = {0};
   int eff_pass[NumOfSegBH2] = {0};
   for(int n=0;n<data->GetEntries();n++){
     if(n%10000 == 0)cout<<"Entry "<<n<<std::endl;
-    cout<<n<<endl;
+
     data->GetEntry(n);
     bcout->GetEntry(n);
-    if(kaon){
-      if(btof0 >-3)continue;
+    
+    double btof = -1*btof0;
+    if(kaon && !pion){
+      if(btof >kaon_max)continue;
+      if(btof <kaon_min)continue;
     }
+    else if(pion && !kaon){
+      if(btof <pion_min)continue;
+      if(btof >pion_max)continue;
+    }
+    else if(pion && kaon){
+      if(btof<pion_min)continue;
+      if(btof>pion_max && btof<kaon_min)continue;
+      if(btof > kaon_max)continue;
+		      
+    }
+    if (!x0 || !y0 || !u0 || !v0) {continue;}
+    if (x0->empty() ||y0->empty() ||u0->empty() ||v0->empty()) continue;
+    if (!bh2_adc_u || bh2_adc_u->empty() ||
+	!bh2_adc_d || bh2_adc_d->empty() ||
+	!bh2_tdc_s || bh2_tdc_s->empty() ||
+	!bac_adc_u || bac_adc_u->empty() ||
+	!bac_tdc_u || bac_tdc_u->empty()) {
+      continue;
+    }
+    if (bac_tdc_u->size() < NumOfSegBAC||
+	bac_tdc_u->size() <= 4||
+	bh2_adc_u->size() < NumOfSegBH2||
+	bh2_adc_d->size() < NumOfSegBH2||
+	bh2_tdc_s->size() < NumOfSegBH2)continue;
 
     //BH2 cut start w/ BcOut
     for(int i=0;i<NumOfSegBH2;i++){
@@ -516,9 +579,38 @@ void analysis_e72(int runnumber, int runnumber_ped)
     if(n%10000 == 0)cout<<"Entry "<<n<<std::endl;
     data->GetEntry(n);
     bcout->GetEntry(n);
-    if(kaon){
-      if(btof0 >-4)continue;
+    
+    double btof = -1*btof0;
+    if(kaon && !pion){
+      if(btof >kaon_max)continue;
+      if(btof <kaon_min)continue;
     }
+    else if(pion && !kaon){
+      if(btof <pion_min)continue;
+      if(btof >pion_max)continue;
+    }
+    else if(pion && kaon){
+      if(btof<pion_min)continue;
+      if(btof>pion_max && btof<kaon_min)continue;
+      if(btof > kaon_max)continue;
+		      
+    }
+    if (!x0 || !y0 || !u0 || !v0) {continue;}
+    if (x0->empty() ||y0->empty() ||u0->empty() ||v0->empty()) continue;
+    if (!bh2_adc_u || bh2_adc_u->empty() ||
+	!bh2_adc_d || bh2_adc_d->empty() ||
+	!bh2_tdc_s || bh2_tdc_s->empty() ||
+	!bac_adc_u || bac_adc_u->empty() ||
+	!bac_tdc_u || bac_tdc_u->empty()) {
+      continue;
+    }
+    if (bac_tdc_u->size() < NumOfSegBAC||
+	bac_tdc_u->size() <= 4||
+	bh2_adc_u->size() < NumOfSegBH2||
+	bh2_adc_d->size() < NumOfSegBH2||
+	bh2_tdc_s->size() < NumOfSegBH2)continue;
+        
+
     
 
     //BH2, BAC cut start w/ BcOut
@@ -573,27 +665,31 @@ void analysis_e72(int runnumber, int runnumber_ped)
 	//Make beam file end
 	eff_total[i]++;
 	hist_bac_npe_s_bh2[i]->Fill((*bac_adc_u)[4] - bac_ped_mean_s);
-	if(runnumber<2000){
-	  if(i >=4 && i <=10)
-	    hist_bac_npe_s_total->Fill((*bac_adc_u)[4] - bac_ped_mean_s);
-	}
-	else if(runnumber>2000){
-	  if(i>=3 && i<=9)
-	    hist_bac_npe_s_total->Fill((*bac_adc_u)[4] - bac_ped_mean_s);
+	if(abs((*x0)[0]+BAC_z*(*u0)[0]) < 115./2. && abs((*y0)[0]+BAC_z*(*v0)[0])<115./2.){
+	  if(runnumber<2000){
+	    if(i >=4 && i <=10)
+	      hist_bac_npe_s_total->Fill((*bac_adc_u)[4] - bac_ped_mean_s);
+	  }
+	  else if(runnumber>2000){
+	    if(i>=3 && i<=9)
+	      hist_bac_npe_s_total->Fill((*bac_adc_u)[4] - bac_ped_mean_s);
+	  }
 	}
 	
 	//BAC npe cut offline
 	//if(bac_npe <npe_threshold)continue;
-	for(int j=0;j<(*bac_tdc_u).size();j++){
+	for(int j=0;j<(*bac_tdc_u)[4].size();j++){
 	  if((*bac_tdc_u)[4][j]>bac_tdc_cut[0] && (*bac_tdc_u)[4][j]<bac_tdc_cut[1]){
 	    hist_bac_npe_s_bh2_pass[i]->Fill((*bac_adc_u)[4] - bac_ped_mean_s);
-	    if(runnumber<2000){
-	      if(i >=4 && i <=10)
-		hist_bac_npe_s_pass->Fill((*bac_adc_u)[4] - bac_ped_mean_s);
-	    }
-	    if(runnumber>2000){
-	      if(i>=3 && i<=9)
-		hist_bac_npe_s_pass->Fill((*bac_adc_u)[4] - bac_ped_mean_s);
+	    if(abs((*x0)[0]+BAC_z*(*u0)[0]) < 115./2. && abs((*y0)[0]+BAC_z*(*v0)[0])<115./2.){
+	      if(runnumber<2000){
+		if(i >=4 && i <=10)
+		  hist_bac_npe_s_pass->Fill((*bac_adc_u)[4] - bac_ped_mean_s);
+	      }
+	      if(runnumber>2000){
+		if(i>=3 && i<=9)
+		  hist_bac_npe_s_pass->Fill((*bac_adc_u)[4] - bac_ped_mean_s);
+	      }
 	    }
 	    eff_pass[i]++;
 	    break;
