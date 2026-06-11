@@ -219,7 +219,7 @@ void beta_compare(){
   gr->GetXaxis()->SetLimits(1.00,1.30);
   gr->GetYaxis()->SetRangeUser(0, 42);
   gr->Draw("AP");
-  TBox *box = new TBox(1.029, 0, 1.047, 40);
+  TBox *box = new TBox(1.029, 0, 1.047, 42);
   box->SetFillColorAlpha(kRed, 0.15); 
   box->SetLineColor(0);               
 

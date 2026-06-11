@@ -3,11 +3,27 @@ void draw_graph(){
   TGraphErrors* g_bac_npe_mean = (TGraphErrors*)f->Get("g_bac_npe_mean");
   TGraphAsymmErrors *g_eff = (TGraphAsymmErrors*)f->Get("g_eff");
 
+  TFile* f500 = TFile::Open("t110_graph_323.root");
+  TGraphErrors* g_bac_npe_mean500 = (TGraphErrors*)f500->Get("g_bac_npe_mean");
+  TGraphAsymmErrors *g_eff500 = (TGraphAsymmErrors*)f500->Get("g_eff");
+
+  TFile* f700 = TFile::Open("t110_graph_328.root");
+  TGraphErrors* g_bac_npe_mean700 = (TGraphErrors*)f700->Get("g_bac_npe_mean");
+  TGraphAsymmErrors *g_eff700 = (TGraphAsymmErrors*)f700->Get("g_eff");
+
+  TFile* f1000 = TFile::Open("t110_graph_332.root");
+  TGraphErrors* g_bac_npe_mean1000 = (TGraphErrors*)f1000->Get("g_bac_npe_mean");
+  TGraphAsymmErrors *g_eff1000 = (TGraphAsymmErrors*)f1000->Get("g_eff");
+
+  
+
   TFile *f_beam = new TFile("t110_beam_735.root");
   TTree *t_beam = (TTree*)f_beam->Get("tree");
   int seg_bh2;
   t_beam->SetBranchAddress("seg_bh2",&seg_bh2);
-  
+
+  TGraphErrors *g_simul_npe = new TGraphErrors();
+  /*
   TFile *f_simul = TFile::Open("../../../data/JPARC2025May/g4_root/T110_simul.root");
   TTree* t_simul = (TTree*)f_simul->Get("tree");
   int nhMppc;
@@ -15,6 +31,7 @@ void draw_graph(){
   t_simul->SetBranchAddress("nhMppc",&nhMppc);
   t_simul->SetBranchAddress("evtposx",&evtposx);
   t_simul->SetBranchAddress("evtposy",&evtposy);
+
   
 
   TH1D *h_npe[12];
@@ -37,7 +54,7 @@ void draw_graph(){
   c0->Divide(4,3);
   TCanvas *c10 = new TCanvas("c10","c10");
   c10->Divide(4,3);
-  TGraphErrors *g_simul_npe = new TGraphErrors();
+  
   double* x_npe  = g_bac_npe_mean->GetX();
   double* ex_npe = g_bac_npe_mean->GetEX();
   double m_npe[7];
@@ -58,14 +75,30 @@ void draw_graph(){
     h_xy[i]->Draw("colz");
   }
   
-  
+  */
   TCanvas *c1 = new TCanvas("c1","c1");
   
   g_simul_npe->SetMarkerStyle(21);
+  
+
   //g_bac_npe_mean->SetMarkerColor(kRed);
   //g_simul_npe->SetMarkerSize(2);
   int n = g_bac_npe_mean->GetN();
   g_bac_npe_mean->Set(n-1);
+  g_bac_npe_mean500->Set(n-1);
+  g_bac_npe_mean700->Set(n-1);
+  g_bac_npe_mean1000->Set(n-1);
+
+  g_bac_npe_mean->SetMarkerColor(2);
+  g_bac_npe_mean500->SetMarkerColor(3);
+  g_bac_npe_mean700->SetMarkerColor(1);
+  g_bac_npe_mean1000->SetMarkerColor(4);
+
+  g_bac_npe_mean->SetLineColor(2);
+  g_bac_npe_mean500->SetLineColor(3);
+  g_bac_npe_mean700->SetLineColor(1);
+  g_bac_npe_mean1000->SetLineColor(4);
+  
   TLegend* leg = new TLegend(0.45, 0.55, 0.88, 0.82);
   leg->SetBorderSize(1);
   leg->SetFillStyle(0);
@@ -74,7 +107,13 @@ void draw_graph(){
   leg->AddEntry(g_simul_npe,  "Simulation", "p");
  
   auto mg = new TMultiGraph();
+  auto mg_eff = new TMultiGraph();
+  mg->Add(g_bac_npe_mean700);
   mg->Add(g_bac_npe_mean);
+  //mg->Add(g_bac_npe_mean500);
+  
+  //mg->Add(g_bac_npe_mean1000);
+  
   //mg->Add(g_simul_npe);
   mg->GetYaxis()->SetRangeUser(10,50);
   mg->GetXaxis()->SetTitle("X [mm]");
@@ -82,12 +121,37 @@ void draw_graph(){
 			   
   mg->Draw("AP");
   //leg->Draw("same");
+
+  g_eff->Set(n-1);
+  g_eff500->Set(n-1);
+  g_eff700->Set(n-1);
+  g_eff1000->Set(n-1);
+
+  g_eff->SetLineColor(2);
+  g_eff500->SetLineColor(3);
+  g_eff700->SetLineColor(1);
+  g_eff1000->SetLineColor(4);
+
+  g_eff->SetMarkerColor(2);
+  g_eff500->SetMarkerColor(3);
+  g_eff700->SetMarkerColor(1);
+  g_eff1000->SetMarkerColor(4);
+
+  mg_eff->Add(g_eff700);
+  mg_eff->Add(g_eff);
+  //mg_eff->Add(g_eff500);
+  
+  //mg_eff->Add(g_eff1000);
   
   TCanvas *c2 = new TCanvas("c2","c2");
-  g_eff->GetXaxis()->SetTitle("X [mm]");
-  g_eff->GetYaxis()->SetTitle("Pion Efficiency");
-  g_eff->Set(n-1);
-  g_eff->Draw("AP");
+  mg_eff->GetXaxis()->SetTitle("X [mm]");
+  mg_eff->GetYaxis()->SetTitle("Pion Efficiency");
   
+  mg_eff->Draw("AP");
+
+  TLegend *leg1 = new TLegend(0.65,0.75,0.88,0.88);
+  leg1->AddEntry(g_eff, "100k/spill");
+  leg1->AddEntry(g_eff700,"600k/spill");
+  leg1->Draw("same");
   
 }
