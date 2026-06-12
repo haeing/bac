@@ -8,8 +8,8 @@
 #include <vector>
 #include <cmath>
 
-bool kaon = false;
-bool pion = false;
+bool kaon = true;
+bool pion = true;
 
 int npe_threshold = -15;
 const double T0_z = -1100.0;
@@ -580,20 +580,8 @@ void analysis_t110(int runnumber, int runnumber_ped)
   hist_bac_tdc_s->Draw();
   c1->Print(out_pdf);
   c1->Clear();
-  auto eff = new TEfficiency(*hist_bac_npe_s_pass, *hist_bac_npe_s);
-  TF1* fturn = new TF1("fturn",
-		       "[0] + [1]/(1.0 + exp(-(x-[2])/[3]))",
-		       -10, 50);
-  // [0]: noise floor, [1]: amplitude, [2]: turn-on center, [3]: width
-  fturn->SetParameters(0.02, 0.95, 5.0, 1.0);
-  auto gr = eff->CreateGraph();
-  gr->Fit(fturn, "R");
-  c1->Divide(2);
-  c1->cd(1);
-  eff->Draw("AP");
-  c1->cd(2);
-  gr->Draw("AP");
-  c1->Print(out_pdf);
+  //auto eff = new TEfficiency(*hist_bac_npe_s_pass, *hist_bac_npe_s);
+  
 
   //Efficiency, Npe check
 
@@ -1158,7 +1146,22 @@ void analysis_t110(int runnumber, int runnumber_ped)
   hist_bac_npe_s_particle->Draw();
   hist_bac_npe_s_particle_pass->SetFillColor(kRed);
   hist_bac_npe_s_particle_pass->Draw("same");
-  c5->Print(out_pdf + ")");
+  c5->Print(out_pdf);
+  c1->Clear();
+  auto eff = new TEfficiency(*hist_bac_npe_s_particle_pass, *hist_bac_npe_s_particle);
+  TF1* fturn = new TF1("fturn",
+		       "[0] + [1]/(1.0 + exp(-(x-[2])/[3]))",
+		       -10, 50);
+  // [0]: noise floor, [1]: amplitude, [2]: turn-on center, [3]: width
+  fturn->SetParameters(0.02, 0.95, 5.0, 1.0);
+  auto gr = eff->CreateGraph();
+  gr->Fit(fturn, "R");
+  c1->Divide(2);
+  c1->cd(1);
+  eff->Draw("AP");
+  c1->cd(2);
+  gr->Draw("AP");
+  c1->Print(out_pdf + ")");
   //Save graphs
   TFile* f_graph = new TFile(Form("t110_graph_%d.root",runnumber),"RECREATE");
   g_bac_npe_mean->Write("g_bac_npe_mean");
