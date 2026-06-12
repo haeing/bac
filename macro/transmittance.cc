@@ -136,20 +136,20 @@ void transmittance()
   // =========================
   //TCanvas* c = new TCanvas("c", "Rayleigh fit", 800, 500);
   TCanvas* c = new TCanvas("c", "Rayleigh fit");
-  //c->SetMargin(0.12, 0.05, 0.12, 0.05);
+  c->SetMargin(0.18, 0.05, 0.18, 0.05);
 
   g->SetMarkerStyle(20);
-  g->SetMarkerSize(1.0);
+  g->SetMarkerSize(1.5);
   g->SetMarkerColor(kBlack);
   g->SetLineColor(kBlack);
 
   g->Draw("AP");
   g->GetXaxis()->SetTitle("Wavelength [nm]");
   g->GetYaxis()->SetTitle("Transmittance");
-  g->GetXaxis()->SetTitleSize(0.05);
-  g->GetYaxis()->SetTitleSize(0.05);
-  g->GetXaxis()->SetLabelSize(0.045);
-  g->GetYaxis()->SetLabelSize(0.045);
+  g->GetXaxis()->SetTitleSize(0.08);
+  g->GetYaxis()->SetTitleSize(0.08);
+  g->GetXaxis()->SetLabelSize(0.08);
+  g->GetYaxis()->SetLabelSize(0.08);
 
   g->GetYaxis()->SetRangeUser(0.0, 1.05);
 

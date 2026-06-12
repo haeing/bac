@@ -34,7 +34,7 @@ void n_index_mom()
   TH1D* frame = new TH1D("frame", "", 100, pmin, pmax);
   frame->SetMinimum(1.0);
   frame->SetMaximum(1.35);
-  frame->GetXaxis()->SetTitle("Momentum [MeV/c]");
+  frame->GetXaxis()->SetTitle("Momentum [MeV/#it{c}]");
   frame->GetYaxis()->SetTitle("Refractive index");
   frame->Draw();
 
@@ -91,7 +91,7 @@ void n_index_mom()
   // Legend
   TLegend* leg = new TLegend(0.65, 0.65, 0.95, 0.95);
   leg->AddEntry(g_pi, "#pi threshold", "l");
-  leg->AddEntry(g_K,  "K threshold", "l");
+  leg->AddEntry(g_K,  "#it{K} threshold", "l");
   leg->AddEntry(line_n,
               "#splitline{Silica aerogel}{(n = 1.115)}",
               "l");
