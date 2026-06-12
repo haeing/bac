@@ -11,13 +11,13 @@
 
 bool kaon = false;
 bool pion = true;
-/*
+
 const double pion_min = -3.;
 const double pion_max = 2.;
-*/
+/*
 const double pion_min = -4.;
 const double pion_max = 0.;
-
+*/
 const double kaon_min = 4.5;
 const double kaon_max = 5.6;
 
@@ -257,6 +257,7 @@ void analysis_e72(int runnumber, int runnumber_ped)
 
   for(int n=0;n<100000;n++){
     data_ped->GetEntry(n);
+    if(!bac_adc_u_ped)continue;
     hist_bac_adc_s_ped->Fill((*bac_adc_u_ped)[4]);
   }
 
@@ -284,7 +285,8 @@ void analysis_e72(int runnumber, int runnumber_ped)
 
   
   double peak = FindGausPeak(hist_bac_adc_s_ped);
-  f_bac_adc_s_ped->SetRange(peak-50,peak+50);
+  //f_bac_adc_s_ped->SetRange(peak-50,peak+50);
+  f_bac_adc_s_ped->SetRange(150,250);
   hist_bac_adc_s_ped->Fit(f_bac_adc_s_ped,"RQ");
   hist_bac_adc_s_ped->Draw();
   double bac_ped_mean_s = f_bac_adc_s_ped->GetParameter(1);
@@ -336,10 +338,12 @@ void analysis_e72(int runnumber, int runnumber_ped)
     hist_bac_npe[i] = new TH1D(Form("hist_bac_npe%d",i),Form("hist_bac_npe%d",i),70,-20,50);
   }
 
-  for(int n=0;n<data->GetEntries();n++){
+  for(int n=0;n<data->GetEntries()-1;n++){
+    
     data->GetEntry(n);
     bcout->GetEntry(n);
     double btof = -1*btof0;
+
     if(kaon && !pion){
       if(btof >kaon_max)continue;
       if(btof <kaon_min)continue;
@@ -354,6 +358,7 @@ void analysis_e72(int runnumber, int runnumber_ped)
       if(btof > kaon_max)continue;
 		      
     }
+    
     if (!x0 || !y0 || !u0 || !v0) {continue;}
     if (x0->empty() ||y0->empty() ||u0->empty() ||v0->empty()) continue;
     if (!bh2_adc_u || bh2_adc_u->empty() ||
@@ -364,14 +369,16 @@ void analysis_e72(int runnumber, int runnumber_ped)
 	!bac_tdc_u || bac_tdc_u->empty()) {
       continue;
     }
+
     if (bac_tdc_u->size() < NumOfSegBAC||
 	bac_tdc_u->size() <= 4||
 	bh2_adc_u->size() < NumOfSegBH2||
-	bh2_adc_d->size() < NumOfSegBH2)continue;
-    
-    
+	bh2_adc_d->size() < NumOfSegBH2||
+	bh2_tdc_u->size() < NumOfSegBH2)continue;
+
+
     if(n%10000 == 0)cout<<"Entry "<<n<<std::endl;
-    
+
     for(int i=0;i<NumOfSegBH2;i++){
       hist_bh2_adc_u[i]->Fill((*bh2_adc_u)[i]);
       hist_bh2_adc_d[i]->Fill((*bh2_adc_d)[i]);
@@ -380,6 +387,7 @@ void analysis_e72(int runnumber, int runnumber_ped)
       }
     }
     for(int j=0;j<(*bac_tdc_u)[4].size();j++)hist_bac_tdc_s->Fill((*bac_tdc_u)[4][j]);
+    
     hist_bac_npe_s->Fill((*bac_adc_u)[4]);
   }
   
@@ -812,6 +820,7 @@ void analysis_e72(int runnumber, int runnumber_ped)
   }
   hist_bac_npe_s_total->Write("hist_bac_npe_s_total");
   hist_bac_npe_s_pass->Write("hist_bac_npe_s_pass");
+  hist_bac_npe_s->Write("hist_bac_npe_s");
   g_eff->SetName("g_eff");
   g_bac_npe_mean->SetName("g_bac_npe_mean");
   g_bac_npe_mean->Write();
