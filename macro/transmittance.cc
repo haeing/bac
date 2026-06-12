@@ -146,12 +146,13 @@ void transmittance()
   g->Draw("AP");
   g->GetXaxis()->SetTitle("Wavelength [nm]");
   g->GetYaxis()->SetTitle("Transmittance");
-  g->GetXaxis()->SetTitleSize(0.08);
-  g->GetYaxis()->SetTitleSize(0.08);
-  g->GetXaxis()->SetLabelSize(0.08);
-  g->GetYaxis()->SetLabelSize(0.08);
+  g->GetXaxis()->SetTitleSize(0.09);
+  g->GetYaxis()->SetTitleSize(0.09);
+  g->GetXaxis()->SetLabelSize(0.09);
+  g->GetYaxis()->SetLabelSize(0.09);
 
   g->GetYaxis()->SetRangeUser(0.0, 1.05);
+  g->GetXaxis()->SetRangeUser(200,700);
 
   f->SetLineColor(kRed + 1);
   f->SetLineWidth(3);
