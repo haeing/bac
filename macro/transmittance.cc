@@ -134,8 +134,9 @@ void transmittance()
   // =========================
   // Plot
   // =========================
-  TCanvas* c = new TCanvas("c", "Rayleigh fit", 800, 500);
-  c->SetMargin(0.12, 0.05, 0.12, 0.05);
+  //TCanvas* c = new TCanvas("c", "Rayleigh fit", 800, 500);
+  TCanvas* c = new TCanvas("c", "Rayleigh fit");
+  //c->SetMargin(0.12, 0.05, 0.12, 0.05);
 
   g->SetMarkerStyle(20);
   g->SetMarkerSize(1.0);

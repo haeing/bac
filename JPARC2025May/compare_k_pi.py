@@ -213,7 +213,7 @@ ax_2d.tick_params(labelleft=False)
 
 
 # Put threshold line
-cut_x = 15
+cut_x = 14.6
 
 
 # 2D histogram
@@ -234,15 +234,15 @@ ax_xproj.axvline(
     linestyle="--"
 )
 
-ax_2d.text(
-    cut_x-1.5,
-    -2.1,
-    "15",
-    color="gray",
-    fontsize=16,
-    ha="center",
-    va="top"
-)
+# ax_2d.text(
+#     cut_x-1.5,
+#     -2.1,
+#     "15",
+#     color="gray",
+#     fontsize=16,
+#     ha="center",
+#     va="top"
+# )
 
 # pion region
 

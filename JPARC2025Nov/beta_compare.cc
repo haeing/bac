@@ -362,6 +362,8 @@ void beta_compare(){
   box->Draw("same");
   
   flin->Draw("same");
+  // after drawing graph
+  gPad->Update();
 
   //gPad->Update();
   
@@ -377,10 +379,10 @@ void beta_compare(){
   c1->SaveAs("beta_npe.pdf");
 
   /*
-  TFile* fout = new TFile("npe_mean_vs_invbeta2.root", "RECREATE");
-  gr->Write();
-  if (flin) flin->Write("fit_linear");
-  c1->Write();
-  fout->Close();
+    TFile* fout = new TFile("npe_mean_vs_invbeta2.root", "RECREATE");
+    gr->Write();
+    if (flin) flin->Write("fit_linear");
+    c1->Write();
+    fout->Close();
   */
 }
