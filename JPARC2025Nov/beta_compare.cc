@@ -38,6 +38,7 @@ void beta_compare(){
   // 조건:
   // particle = pi, trig = beam, threshold = 30 인 run만 사용
   std::vector<RunInfo> runs = {
+    //HS off
     //{2596, 1000},
     {2585, 933},
     //{2502, 814},
@@ -45,7 +46,13 @@ void beta_compare(){
     {2580, 735},
     {2589, 715},
     //{2592, 645},
-    {2512, 400}
+    {2512, 400},
+
+    //HS On
+    {2489,1000},
+    {2502,814},
+    //{2509,645},
+    {2610,715}
   };
 
   std::vector<double> x, y, ex, ey;
