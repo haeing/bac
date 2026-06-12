@@ -4,6 +4,11 @@ void kaon_decay_data(){
   
   TH2D* hist_bac_btof = (TH2D*)f->Get("hist_bac_btof");
   TH2D* hist_bac_btof_pass = (TH2D*)f->Get("hist_bac_btof_pass");
+  
+  /*
+  TH1D* hist_bac_btof = (TH1D*)f->Get("hist_bac_npe_s_particle");
+  TH1D* hist_bac_btof_pass = (TH1D*)f->Get("hist_bac_npe_s_particle_pass");
+  */
 
   double total = hist_bac_btof->Integral();
   double pass = hist_bac_btof_pass->Integral();

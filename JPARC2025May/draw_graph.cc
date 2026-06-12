@@ -89,14 +89,14 @@ void draw_graph(){
   g_bac_npe_mean700->Set(n-1);
   g_bac_npe_mean1000->Set(n-1);
 
-  g_bac_npe_mean->SetMarkerColor(2);
+  g_bac_npe_mean->SetMarkerColor(1);
   g_bac_npe_mean500->SetMarkerColor(3);
-  g_bac_npe_mean700->SetMarkerColor(1);
+  g_bac_npe_mean700->SetMarkerColor(kBlue);
   g_bac_npe_mean1000->SetMarkerColor(4);
 
-  g_bac_npe_mean->SetLineColor(2);
+  g_bac_npe_mean->SetLineColor(1);
   g_bac_npe_mean500->SetLineColor(3);
-  g_bac_npe_mean700->SetLineColor(1);
+  g_bac_npe_mean700->SetLineColor(kBlue);
   g_bac_npe_mean1000->SetLineColor(4);
   
   TLegend* leg = new TLegend(0.45, 0.55, 0.88, 0.82);
@@ -127,14 +127,14 @@ void draw_graph(){
   g_eff700->Set(n-1);
   g_eff1000->Set(n-1);
 
-  g_eff->SetLineColor(2);
+  g_eff->SetLineColor(1);
   g_eff500->SetLineColor(3);
-  g_eff700->SetLineColor(1);
+  g_eff700->SetLineColor(kBlue);
   g_eff1000->SetLineColor(4);
 
-  g_eff->SetMarkerColor(2);
+  g_eff->SetMarkerColor(1);
   g_eff500->SetMarkerColor(3);
-  g_eff700->SetMarkerColor(1);
+  g_eff700->SetMarkerColor(kBlue);
   g_eff1000->SetMarkerColor(4);
 
   mg_eff->Add(g_eff700);
