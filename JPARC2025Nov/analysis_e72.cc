@@ -10,16 +10,16 @@
 
 
 bool kaon = false;
-bool pion = true;
+bool pion = false;
 
-const double pion_min = -3.;
-const double pion_max = 2.;
+const double pion_min = -2.;
+const double pion_max = 1.;
 /*
 const double pion_min = -4.;
 const double pion_max = 0.;
 */
-const double kaon_min = 4.5;
-const double kaon_max = 5.6;
+const double kaon_min = 3.;
+const double kaon_max = 5.;
 
 int npe_threshold = 5;
 const double T0_z = -1100.0;
@@ -305,6 +305,8 @@ void analysis_e72(int runnumber, int runnumber_ped)
   TH1D *hist_bac_npe[NumOfSegBAC];
   TH1D *hist_bac_npe_s = new TH1D("hist_bac_npe_s","hist_bac_npe_s",110,-100,1000);
   TH1D *hist_bac_npe_s_total = new TH1D("hist_bac_npe_s_total","hist_bac_npe_s_total",110,-100,1000);
+  TH2D *hist_bac_btof = new TH2D("hist_bac_btof","hist_bac_btof",120,-200,1000,100,-10,10);
+  TH2D *hist_bac_btof_pass = new TH2D("hist_bac_btof_pass","hist_bac_btof_pass",120,-200,1000,100,-10,10);
   TH1D *hist_bac_npe_s_bh2[NumOfSegBH2];
   TH1D *hist_bac_npe_s_bh2_pass[NumOfSegBH2];
   TH1D *hist_bac_npe_s_pass = new TH1D("hist_bac_npe_s_pass","hist_bac_npe_s_pass",110,-100,1000);
@@ -693,14 +695,20 @@ void analysis_e72(int runnumber, int runnumber_ped)
 	eff_total[i]++;
 
 	hist_bac_npe_s_bh2[i]->Fill((*bac_adc_u)[4] - bac_ped_mean_s);
-	if(abs((*x0)[0]+BAC_z*(*u0)[0]) < 115./2. && abs((*y0)[0]+BAC_z*(*v0)[0])<115./2.){
+	double x_bac = (*x0)[0]+BAC_z*(*u0)[0];
+	double y_bac = (*y0)[0]+BAC_z*(*v0)[0];
+	if(x_bac>-115./2.-17.25 && x_bac < 115./2.-17.25 && abs(y_bac) <115./2.){
 	  if(runnumber<2000){
-	    if(i >=4 && i <=10)
+	    //if(i >=4 && i <=10)
+	    if(i >=4 && i <=9)
 	      hist_bac_npe_s_total->Fill((*bac_adc_u)[4] - bac_ped_mean_s);
+	    
 	  }
 	  else if(runnumber>2000){
-	    if(i>=3 && i<=9)
+	    if(i>=4 && i<=9){
 	      hist_bac_npe_s_total->Fill((*bac_adc_u)[4] - bac_ped_mean_s);
+	      hist_bac_btof->Fill((*bac_adc_u)[4]-bac_ped_mean_s,btof);
+	    }
 	  }
 	}
 	
@@ -709,14 +717,17 @@ void analysis_e72(int runnumber, int runnumber_ped)
 	for(int j=0;j<(*bac_tdc_u)[4].size();j++){
 	  if((*bac_tdc_u)[4][j]>bac_tdc_cut[0] && (*bac_tdc_u)[4][j]<bac_tdc_cut[1]){
 	    hist_bac_npe_s_bh2_pass[i]->Fill((*bac_adc_u)[4] - bac_ped_mean_s);
-	    if(abs((*x0)[0]+BAC_z*(*u0)[0]) < 115./2. && abs((*y0)[0]+BAC_z*(*v0)[0])<115./2.){
+	    if(x_bac>-115./2.-17.25 && x_bac < 115./2.-17.25 && abs(y_bac) <115./2.){
 	      if(runnumber<2000){
-		if(i >=4 && i <=10)
+		//if(i >=4 && i <=10)
+		if(i >=4 && i <=9)
 		  hist_bac_npe_s_pass->Fill((*bac_adc_u)[4] - bac_ped_mean_s);
 	      }
 	      if(runnumber>2000){
-		if(i>=3 && i<=9)
+		if(i>=4 && i<=9){
 		  hist_bac_npe_s_pass->Fill((*bac_adc_u)[4] - bac_ped_mean_s);
+		  hist_bac_btof_pass->Fill((*bac_adc_u)[4]-bac_ped_mean_s,btof);
+		}
 	      }
 	    }
 	    eff_pass[i]++;
@@ -813,19 +824,21 @@ void analysis_e72(int runnumber, int runnumber_ped)
   g_eff->Draw("AP");
   c5->Print(out_pdf + ")");
   //Save graphs
-  TFile* f_hist = new TFile(Form("e72_hist_%d.root",runnumber),"RECREATE");
+  TFile* f_hist = new TFile(Form("e72_hist_%d_pion_kaon.root",runnumber),"RECREATE");
   for(int i=0;i<NumOfSegBH2;i++){
     hist_bac_npe_s_bh2[i]->Write(Form("hist_bac_npe_s%d",i));
     hist_bac_npe_s_bh2_pass[i]->Write(Form("hist_bac_npe_s_bh2_pass%d",i));
   }
   hist_bac_npe_s_total->Write("hist_bac_npe_s_total");
   hist_bac_npe_s_pass->Write("hist_bac_npe_s_pass");
+  
   hist_bac_npe_s->Write("hist_bac_npe_s");
   g_eff->SetName("g_eff");
   g_bac_npe_mean->SetName("g_bac_npe_mean");
   g_bac_npe_mean->Write();
   g_eff->Write();
-		 
+  hist_bac_btof->Write();
+  hist_bac_btof_pass->Write();
   f_hist->Close();
 
 
