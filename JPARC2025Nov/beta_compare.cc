@@ -187,6 +187,7 @@ void beta_compare(){
     
     double mean    = fgaus->GetParameter(1);
     double meanErr = fgaus->GetParError(1);
+    double sig_npe = fgaus->GetParameter(2);
 
     double beta = CalcBeta(r.mom);
     double invbeta2 = 1.0 / (beta * beta);
@@ -221,6 +222,7 @@ void beta_compare(){
 
 
   //Add 600 MeV/c point in T110
+  /*
   double beta = CalcBeta(600);
   double invbeta2 = 1.0 / (beta * beta);
 
@@ -242,7 +244,7 @@ void beta_compare(){
   double eff_p = Npass / Ntotal;
   eff.push_back(eff_p);
   eeff.push_back(sqrt(eff_p*(1.0-eff_p)/Ntotal));
-  
+  */
 
   if (x.empty()) {
     std::cerr << "No valid points found." << std::endl;
