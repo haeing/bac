@@ -31,7 +31,7 @@ double CalcBeta(double p_mev, double mass_mev = 139.57039) {
   return p_mev / std::sqrt(p_mev * p_mev + mass_mev * mass_mev);
 }
 
-void beta_compare(){
+void mom_eff(){
   gStyle->SetOptStat(0);
   //gStyle->SetOptFit(1111);
   //gStyle->SetOptFit(0);
@@ -48,7 +48,7 @@ void beta_compare(){
     {2580, 735,0},
     {2589, 715,0},
     //{2592, 645},
-    
+    {2512, 400,1},
 
 
     //HS On
@@ -59,7 +59,7 @@ void beta_compare(){
     {2884,685,1},
     {3005,665,1},
     {2977,645,1},
-    {2512, 400,1},
+    //{2512, 400,1},
 
   };
 
