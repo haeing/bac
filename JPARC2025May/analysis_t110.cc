@@ -8,7 +8,7 @@
 #include <vector>
 #include <cmath>
 
-bool kaon = true;
+bool kaon = false;
 bool pion = true;
 
 int npe_threshold = -15;
