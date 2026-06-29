@@ -259,7 +259,7 @@ void beta_compare(){
 
   
   gr->SetName("gr_npe_mean_vs_invbeta2");
-  gr->SetTitle(";1/#beta^{2};Np.e.");
+  gr->SetTitle(";1/#it{#beta}^{2};Np.e.");
   gr->GetXaxis()->SetLimits(1.01, 1.15);
   gr->SetMarkerStyle(20);
   gr->SetMarkerColor(kBlack);
@@ -276,7 +276,7 @@ void beta_compare(){
   //gr->SetName("gr_npe_mean_vs_invbeta2");
   //gr->SetTitle(";1/#beta^{2};Np.e.");
   //gr->GetXaxis()->SetLimits(1.01, 1.15);
-  gr1->SetMarkerStyle(20);
+  gr1->SetMarkerStyle(24);
   gr1->SetMarkerColor(kBlue);
   gr1->SetLineColor(kBlue);
   gr1->SetMarkerSize(1.2);
@@ -286,7 +286,7 @@ void beta_compare(){
   mg->Add(gr);
   mg->Add(gr1);
   mg->SetName("gr_npe_mean_vs_invbeta2");
-  mg->SetTitle(";1/#beta^{2};Np.e.");
+  mg->SetTitle(";1/#it{#beta}^{ 2};Np.e.");
   
    
 

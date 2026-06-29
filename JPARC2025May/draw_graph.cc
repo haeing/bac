@@ -92,6 +92,7 @@ void draw_graph(){
   g_bac_npe_mean->SetMarkerColor(1);
   g_bac_npe_mean500->SetMarkerColor(3);
   g_bac_npe_mean700->SetMarkerColor(kBlue);
+  g_bac_npe_mean700->SetMarkerStyle(24);
   g_bac_npe_mean1000->SetMarkerColor(4);
 
   g_bac_npe_mean->SetLineColor(1);
@@ -135,6 +136,7 @@ void draw_graph(){
   g_eff->SetMarkerColor(1);
   g_eff500->SetMarkerColor(3);
   g_eff700->SetMarkerColor(kBlue);
+  g_eff700->SetMarkerStyle(24);
   g_eff1000->SetMarkerColor(4);
 
   mg_eff->Add(g_eff700);
