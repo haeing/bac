@@ -96,7 +96,7 @@ void threshold_scan_344(const char* input_file = "t110_graph_344_k_pi.root",
   g_pion_efficiency.SetTitle("Pion efficiency of BAC-ON selection;BAC threshold [N_{p.e.}];Pion efficiency");
   TGraphAsymmErrors g_kaon_misid;
   g_kaon_misid.SetName("g_kaon_misid_as_pion_vs_npe_threshold");
-  g_kaon_misid.SetTitle("Kaon mis-identification as pion;Threshold [Np.e.];Probability");
+  g_kaon_misid.SetTitle("Kaon mis-identification as pion;Threshold [N_{p.e.}];Probability");
 
   TTree scan("threshold_scan", "Run 0344 BAC threshold scan");
   double threshold = 0., kaon_purity = 0., kaon_purity_err_low = 0., kaon_purity_err_high = 0.;
@@ -151,7 +151,7 @@ void threshold_scan_344(const char* input_file = "t110_graph_344_k_pi.root",
     "Errors are 68.3% Clopper-Pearson binomial intervals.");
   TNamed source("source_histogram", "hist_bac_btof from analysis_t110.cc output");
   TCanvas c_tradeoff("c_pion_efficiency_vs_kaon_misid", "BAC threshold trade-off", 900, 700);
-  TH1D frame("h_tradeoff_frame", ";Threshold [Np.e.];Probability", 1, threshold_min, threshold_max);
+  TH1D frame("h_tradeoff_frame", ";Threshold [N_{p.e.}];Probability", 1, threshold_min, threshold_max);
   frame.SetMinimum(-0.05);
   frame.SetMaximum(1.08);
   frame.Draw();
@@ -161,8 +161,8 @@ void threshold_scan_344(const char* input_file = "t110_graph_344_k_pi.root",
   g_kaon_misid.SetMarkerStyle(24);
   g_kaon_misid.SetMarkerColor(kBlue + 1);
   g_kaon_misid.SetLineColor(kBlue + 1);
-  g_pion_efficiency.Draw("PLE SAME");
-  g_kaon_misid.Draw("PLE SAME");
+  g_pion_efficiency.Draw("PE SAME");
+  g_kaon_misid.Draw("PE SAME");
   auto* threshold_line = new TLine(14.59, -0.05, 14.59, 1.08);
   threshold_line->SetLineStyle(2);
   threshold_line->SetLineWidth(2);
