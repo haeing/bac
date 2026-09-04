@@ -152,6 +152,7 @@ void threshold_scan_344(const char* input_file = "t110_graph_344_k_pi.root",
   TNamed source("source_histogram", "hist_bac_btof from analysis_t110.cc output");
   TCanvas c_tradeoff("c_pion_efficiency_vs_kaon_misid", "BAC threshold trade-off", 900, 700);
   TH1D frame("h_tradeoff_frame", ";Threshold [N_{p.e.}];Probability", 1, threshold_min, threshold_max);
+  frame.SetLineColor(0);
   frame.SetMinimum(-0.05);
   frame.SetMaximum(1.08);
   frame.Draw();
