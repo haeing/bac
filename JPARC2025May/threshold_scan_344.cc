@@ -22,6 +22,7 @@
 #include "TLegend.h"
 #include "TLine.h"
 #include "TGraphAsymmErrors.h"
+#include "TGraph.h"
 #include "TH2D.h"
 #include "TNamed.h"
 #include "TTree.h"
@@ -154,25 +155,36 @@ void threshold_scan_344(const char* input_file = "t110_graph_344_k_pi.root",
   TH1D frame("h_tradeoff_frame", ";Threshold [N_{p.e.}];Probability", 1, threshold_min, threshold_max);
   frame.SetLineColor(0);
   frame.SetMinimum(-0.05);
-  frame.SetMaximum(1.08);
+  frame.SetMaximum(1.05);
   frame.Draw();
+  TGraph pion_display(g_pion_efficiency.GetN(), g_pion_efficiency.GetX(), g_pion_efficiency.GetY());
+  TGraph kaon_misid_display(g_kaon_misid.GetN(), g_kaon_misid.GetX(), g_kaon_misid.GetY());
+  pion_display.SetMarkerStyle(20);
+  pion_display.SetMarkerColor(kBlack);
+  kaon_misid_display.SetMarkerStyle(24);
+  kaon_misid_display.SetMarkerColor(kBlue + 1);
   g_pion_efficiency.SetMarkerStyle(20);
   g_pion_efficiency.SetMarkerColor(kBlack);
   g_pion_efficiency.SetLineColor(kBlack);
   g_kaon_misid.SetMarkerStyle(24);
   g_kaon_misid.SetMarkerColor(kBlue + 1);
   g_kaon_misid.SetLineColor(kBlue + 1);
-  g_pion_efficiency.Draw("PE SAME");
-  g_kaon_misid.Draw("PE SAME");
-  auto* threshold_line = new TLine(14.59, -0.05, 14.59, 1.08);
+  pion_display.Draw("P SAME");
+  kaon_misid_display.Draw("P SAME");
+  auto* threshold_line = new TLine(14.59, -0.05, 14.59, 1.05);
   threshold_line->SetLineStyle(2);
   threshold_line->SetLineWidth(2);
   threshold_line->Draw();
-  TLegend legend(0.48, 0.72, 0.88, 0.88);
+  TLegend legend(0.60, 0.78, 0.88, 0.88);
   legend.SetBorderSize(0);
-  legend.AddEntry(&g_pion_efficiency, "pion efficiency", "pl");
-  legend.AddEntry(&g_kaon_misid, "kaon misidentification", "pl");
+  legend.SetFillStyle(0);
+  legend.SetTextSize(0.035);
+  legend.AddEntry(&pion_display, "Pion Efficiency", "p");
+  legend.AddEntry(&kaon_misid_display, "Kaon Misidentification", "p");
   legend.Draw();
+  c_tradeoff.Modified();
+  c_tradeoff.Update();
+  c_tradeoff.SaveAs("threshold_tradeoff_344.pdf");
   h_npe_btof->Write("hist_bac_btof_source");
   g_kaon_purity.Write();
   g_pion_efficiency.Write();

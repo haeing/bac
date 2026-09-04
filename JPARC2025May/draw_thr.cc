@@ -22,7 +22,7 @@ void draw_thr()
   //c1->SetMargin(0.13, 0.05, 0.12, 0.06);
   //c1->SetTicks(1, 1);
 
-  TH1F *frame = c1->DrawFrame(-10, 0.0, 60, 1.10);
+  TH1F *frame = c1->DrawFrame(-10, -0.05, 60, 1.05);
   frame->SetTitle("");
   frame->GetXaxis()->SetTitle("N_{p.e.}");
   frame->GetYaxis()->SetTitle("Efficiency");
@@ -55,6 +55,11 @@ void draw_thr()
     g_thr->Fit(fit, "R0");
   }
 
+  auto* threshold_line = new TLine(14.59, -0.05, 14.59, 1.05);
+  threshold_line->SetLineStyle(2);
+  threshold_line->SetLineWidth(2);
+  threshold_line->Draw();
+
   fit->SetLineColor(kRed);
   fit->SetLineWidth(2);
   fit->SetRange(-10, 60);
@@ -65,6 +70,6 @@ void draw_thr()
   c1->Modified();
   c1->Update();
 
-  //c1->SaveAs("g_thr_efficiency.pdf");
+  c1->SaveAs("draw_thr.pdf");
   //c1->SaveAs("g_thr_efficiency.png");
 }
