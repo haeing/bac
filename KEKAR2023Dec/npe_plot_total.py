@@ -46,7 +46,7 @@ HV_TARGET = 58
 THRE_BY_THICK = {2: 60, 3: 75}
 
 # Simulation ROOT file pattern (capture aerogel2/3 automatically)
-SIM_PATTERN = "../../../data/KEKAR2023Dec/g4_root/kek_aerogel*_x*_y*.root"
+SIM_PATTERN = "/Users/ihaein/Work/bac/data/KEKAR2023Dec/g4_root/kek_aerogel*_x*_y*.root"
 SIM_TREE = "tree"
 SIM_BR   = "nhMppc"
 

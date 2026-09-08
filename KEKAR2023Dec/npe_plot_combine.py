@@ -26,7 +26,7 @@ BR_NPE   = "bac_npe"
 # =========================================================
 # INPUT ROOT (BEAM)
 # =========================================================
-BEAM_FILE   = "../../../data/E72_Simul/E72_Beam_Simul_735.root"
+BEAM_FILE   = "/Users/ihaein/Work/bac/data/E72_Simul/E72_Beam_Simul_735.root"
 BEAM_TREE   = None      # None -> first TTree automatically
 BEAM_BRANCH = "BAC"
 BEAM_MAX_ENTRIES = None
@@ -355,6 +355,7 @@ def plot_area_averaged_contour_map_smooth(
     sigma_x=9.0,
     sigma_y=13.0,
     nlevels=14,
+    smooth=True,
 ):
     m = np.asarray(m, dtype=float)
 
@@ -372,7 +373,7 @@ def plot_area_averaged_contour_map_smooth(
         x_centers, y_centers,
         sigma_x=sigma_x,
         sigma_y=sigma_y
-    )
+    ) if smooth else None
 
     fig, ax = plt.subplots(figsize=(7.8, 6.8))
 
@@ -382,10 +383,17 @@ def plot_area_averaged_contour_map_smooth(
     vmax = 50
     levels = np.linspace(vmin, vmax, nlevels)
 
-    cf = ax.contourf(X, Y, z_smooth, levels=levels, cmap="viridis")
-
-    # make contour lines weak; comment out next line if you want even cleaner look
-    ax.contour(X, Y, z_smooth, levels=levels, colors="k", linewidths=0.25, alpha=0.22)
+    if smooth:
+        cf = ax.contourf(X, Y, z_smooth, levels=levels, cmap="viridis")
+        ax.contour(X, Y, z_smooth, levels=levels, colors="k", linewidths=0.25, alpha=0.22)
+    else:
+        # Match contourf's color bands, using only measured values.
+        cmap = plt.get_cmap("viridis")
+        norm = mpl.colors.Normalize(vmin=vmin, vmax=vmax)
+        colors = cmap(norm(0.5 * (levels[:-1] + levels[1:])))
+        measured_cmap = mpl.colors.ListedColormap(colors)
+        measured_norm = mpl.colors.BoundaryNorm(levels, measured_cmap.N, clip=True)
+        cf = mpl.cm.ScalarMappable(norm=measured_norm, cmap=measured_cmap)
 
     # detector boundary
     ax.plot(
@@ -395,6 +403,7 @@ def plot_area_averaged_contour_map_smooth(
     )
 
     # measurement rectangles only
+    value_labels = []
     for iy, yc in enumerate(ys):
         for ix, xc in enumerate(xs):
             val = m[iy, ix]
@@ -405,9 +414,26 @@ def plot_area_averaged_contour_map_smooth(
             ax.add_patch(
                 Rectangle(
                     (rx0, ry0), rx1 - rx0, ry1 - ry0,
-                    fill=False, edgecolor="white", linewidth=0.6, alpha=1
+                    fill=not smooth,
+                    facecolor=cf.to_rgba(val) if not smooth else "none",
+                    edgecolor="white", linewidth=0.6, alpha=1
                 )
             )
+            if not smooth:
+                # Center within the visible part, including edge rectangles.
+                left, right = max(rx0, DET_XMIN), min(rx1, DET_XMAX)
+                bottom, top = max(ry0, DET_YMIN), min(ry1, DET_YMAX)
+                rgb = np.array(cf.to_rgba(val)[:3])
+                linear_rgb = np.where(rgb <= 0.04045, rgb / 12.92,
+                                      ((rgb + 0.055) / 1.055) ** 2.4)
+                luminance = np.dot(linear_rgb, [0.2126, 0.7152, 0.0722])
+                label = ax.text(
+                    (left + right) / 2, (bottom + top) / 2,
+                    f"{val:.1f}", ha="center", va="center",
+                    fontsize=12, color="black" if luminance > 0.179 else "white",
+                    clip_on=True,
+                )
+                value_labels.append((label, left, right, bottom, top))
 
     # beam sigma ellipses
     
@@ -438,6 +464,16 @@ def plot_area_averaged_contour_map_smooth(
     cbar.ax.tick_params(labelsize=14)
 
     fig.tight_layout()
+    if value_labels:
+        fig.canvas.draw()
+        renderer = fig.canvas.get_renderer()
+        for label, left, right, bottom, top in value_labels:
+            bounds = ax.transData.transform([[left, bottom], [right, top]])
+            width, height = bounds[1] - bounds[0]
+            extent = label.get_window_extent(renderer)
+            scale = min(1.0, 0.85 * width / extent.width,
+                        0.85 * height / extent.height)
+            label.set_fontsize(label.get_fontsize() * scale)
     fig.savefig(outname, dpi=220)
     plt.close(fig)
     print(f"Saved: {outname}")
@@ -472,6 +508,14 @@ if __name__ == "__main__":
             sigma_x=RECO_SIGMA_X,
             sigma_y=RECO_SIGMA_Y,
             nlevels=NLEVELS,
+        )
+
+        plot_area_averaged_contour_map_smooth(
+            m, th, thre_target,
+            outname=f"data_npe_measured_HV{HV_TARGET}_thick{th}_thre{thre_target}.png",
+            beam_fit=beam_fit,
+            nlevels=NLEVELS,
+            smooth=False,
         )
 
     print("DONE.")

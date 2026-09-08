@@ -58,13 +58,13 @@ cmap.set_bad("white")
 # Figure
 # =========================================
 
-fig = plt.figure(figsize=(10, 8))
+fig = plt.figure(figsize=(11.1712, 9.06))
 
 gs = GridSpec(
     2,
     3,
-    width_ratios=[1.3, 4.0, 0.25],
-    height_ratios=[1.3, 4.0],
+    width_ratios=[1.95, 4.0, 0.25],
+    height_ratios=[2.0, 4.0],
     wspace=0.0,
     hspace=0.0
 )
